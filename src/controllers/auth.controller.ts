@@ -29,7 +29,8 @@ export class AuthController {
     async confirmProfile(@Request() req) {
       const token = await Token.findOne({ token: req.params.token });
       const userId = token.userId;
-      User.update(userId, {role : Role.VerifiedUser})
+      let user = await User.findOne(userId);
+      User.update(userId, {role : Role.User});
   
       return "Your account has been activated";
   

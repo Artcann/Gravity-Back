@@ -20,7 +20,6 @@ export class AuthService {
   }
 
   async validateUser(email: string, pass: string): Promise<any> {
-    console.log(email);
     const user = await this.userService.findOne(email);
     console.log(user);
     if (!user) {
@@ -28,12 +27,12 @@ export class AuthService {
         status: HttpStatus.UNAUTHORIZED,
         message: "User not found"
       })
-    } else if (!(user.role == Role.VerifiedUser)){
+    } else if (!(user.role?.includes(Role.User))){
       throw new UnauthorizedException({
         status: HttpStatus.UNAUTHORIZED,
         message: "Your account is not verified"
       })
-    } else if (user && await user.validatePassword(pass) && (user.role == Role.VerifiedUser)) {
+    } else if (user && await user.validatePassword(pass) && (user.role?.includes(Role.User))) {
       const { password, ...result } = user;
       return result;
     }
