@@ -1,19 +1,23 @@
-import { LocalStrategy } from './guards/local.strategy';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { UserService } from './services/user.service';
-import { AuthService } from './services/auth.service';
-import { UserController } from './controllers/user.controller';
-import { AuthController } from './controllers/auth.controller';
+import { JwtModule } from '@nestjs/jwt';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
+
+import { JwtStrategy } from './guards/jwt.strategy';
+import { LocalStrategy } from './guards/local.strategy';
+
+import { UserController } from './controllers/user.controller';
+import { AuthController } from './controllers/auth.controller';
+import { EventController } from './controllers/event.controller';
+
+import { UserService } from './services/user.service';
+import { AuthService } from './services/auth.service';
+import { EventService } from './services/event.service';
+
 import { Token } from './entities/token.entity';
 import { User } from './entities/user.entity';
-import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './guards/jwt.strategy';
-import { ConfigModule } from '@nestjs/config';
-import { Roles } from './decorators/roles.decorator';
-import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from './guards/roles.guard';
+import { Event } from './entities/event.entity';
 
 @Module({
   imports: [
@@ -30,10 +34,10 @@ import { RolesGuard } from './guards/roles.guard';
     username: process.env.LOCAL_USER,
     password: process.env.LOCAL_PASS,
     database: process.env.DB_NAME,
-    entities: [User, Token],
+    entities: [User, Token, Event],
     synchronize: true,
   })],
-  controllers: [AuthController, UserController],
-  providers: [AuthService, UserService, JwtStrategy, LocalStrategy],
+  controllers: [AuthController, UserController, EventController],
+  providers: [AuthService, UserService, EventService, JwtStrategy, LocalStrategy],
 })
 export class AppModule {}

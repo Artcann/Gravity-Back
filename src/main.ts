@@ -9,7 +9,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Ws-Maker')
     .setDescription('The Ws-Maker API')
-    .setVersion('1.0.0')
+    .setVersion('1.0.1')
     .build();
   
   app.useGlobalPipes(new ValidationPipe());

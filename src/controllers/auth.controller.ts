@@ -2,7 +2,7 @@ import { UserService } from './../services/user.service';
 import { AuthService } from './../services/auth.service';
 import { Controller, Get, Post, Body, Request, UseGuards} from '@nestjs/common';
 import { randomBytes } from 'crypto';
-import { CreateUserDto } from 'src/dto/create-user.dto';
+import { CreateUserDto } from 'src/dto/user/create-user.dto';
 import { Token } from 'src/entities/token.entity';
 import { User } from 'src/entities/user.entity';
 import { Role } from 'src/entities/enums/role.enum';
