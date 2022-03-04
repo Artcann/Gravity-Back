@@ -49,8 +49,8 @@ export class AuthService {
       auth: {
         type: 'OAuth2',
         user: MAIL,
-        serviceClient: mailerKeys.client_id,
-        privateKey: mailerKeys.private_key
+        serviceClient: process.env.MAILER_CLIENT_ID,
+        privateKey: process.env.MAILER_PRIVATE_KEY
       },
     });
 
