@@ -5,7 +5,6 @@ import { JwtService } from '@nestjs/jwt';
 import { Token } from 'src/entities/token.entity';
 import { User } from 'src/entities/user.entity';
 import { Role } from 'src/entities/enums/role.enum';
-import * as mailerKeys from './mailer-key.json';
 
 @Injectable()
 export class AuthService {
