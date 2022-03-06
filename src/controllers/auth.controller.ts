@@ -7,6 +7,8 @@ import { Token } from 'src/entities/token.entity';
 import { User } from 'src/entities/user.entity';
 import { Role } from 'src/entities/enums/role.enum';
 import { LocalAuthGuard } from 'src/guards/local-auth.guard';
+import { EmailVerificationDto } from 'src/dto/auth/emailVerification.dto';
+import { MailLoginGuard } from 'src/guards/mail-login.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -56,4 +58,9 @@ export class AuthController {
       return this.authService.login(req.user);
     }
   
+    @Post('mail-login')
+    @UseGuards(MailLoginGuard)
+    async mailLogin(@Body() emailVerificationDto: EmailVerificationDto) {
+      return this.authService.mailLogin(emailVerificationDto);
+    }
 }

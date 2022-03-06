@@ -7,9 +7,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('Ws-Maker')
-    .setDescription('The Ws-Maker API')
-    .setVersion('1.0.1')
+    .setTitle('Gravity')
+    .setDescription('Gravity')
+    .setVersion('1.0.0')
     .build();
   
   app.useGlobalPipes(new ValidationPipe());
