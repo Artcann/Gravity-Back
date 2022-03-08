@@ -7,10 +7,10 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({default: ""})
+  @Column({nullable: true})
   username: string;
 
-  @Column()
+  @Column({nullable: true})
   password: string;
 
   @Column({unique: true})
@@ -21,7 +21,9 @@ export class User extends BaseEntity {
 
   @BeforeInsert()
   async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 8);
+    if(this.password) {
+      this.password = await bcrypt.hash(this.password, 8);
+    }
   }
 
   async validatePassword(password: string): Promise<boolean> {

@@ -60,7 +60,6 @@ export class AuthController {
     }
   
     @Post('mail-login')
-    @UseGuards(MailLoginGuard)
     async mailLogin(@Body() emailVerificationDto: EmailVerificationDto) {
       return this.authService.mailLogin(emailVerificationDto);
     }
