@@ -17,7 +17,7 @@ export class User extends BaseEntity {
   email: string;
 
   @Column({default: Role.User})
-  role: Role;
+  role: string;
 
   @BeforeInsert()
   async hashPassword() {

@@ -19,22 +19,31 @@ export class AuthService {
     };
   }
 
-  async mailLogin(email: EmailVerificationDto) {
-    const payload = { email: email };
-    return {
-      access_token: this.jwtService.sign(payload),
+  async mailLogin(emailVerificationDto: EmailVerificationDto) {
+    const user = await this.userService.findOne(emailVerificationDto.email);
+
+    if(!(user.role.includes(Role.VerifiedUser))) {
+      throw new UnauthorizedException({
+        status: HttpStatus.UNAUTHORIZED,
+        message: "Your account is not verified"
+      })
+    } else {
+      const payload = { email: emailVerificationDto.email };
+      return {
+        access_token: this.jwtService.sign(payload),
+      }
     }
+    
   }
 
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.userService.findOne(email);
-    console.log(user);
     if (!user) {
       throw new UnauthorizedException({
         status: HttpStatus.UNAUTHORIZED,
         message: "User not found"
       })
-    } else if (!(user.role?.includes(Role.User))){
+    } else if (!(user.role?.includes(Role.VerifiedUser))){
       throw new UnauthorizedException({
         status: HttpStatus.UNAUTHORIZED,
         message: "Your account is not verified"
