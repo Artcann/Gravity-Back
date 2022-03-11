@@ -59,8 +59,4 @@ export class AuthController {
       return this.authService.login(req.user);
     }
   
-    @Post('mail-login')
-    async mailLogin(@Body() emailVerificationDto: EmailVerificationDto) {
-      return this.authService.mailLogin(emailVerificationDto);
-    }
 }
