@@ -7,6 +7,8 @@ import { Token } from 'src/entities/token.entity';
 import { User } from 'src/entities/user.entity';
 import { Role } from 'src/entities/enums/role.enum';
 import { LocalAuthGuard } from 'src/guards/local-auth.guard';
+import { EmailVerificationDto } from 'src/dto/auth/emailVerification.dto';
+import { MailLoginGuard } from 'src/guards/mail-login.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -30,7 +32,8 @@ export class AuthController {
       const token = await Token.findOne({ token: req.params.token });
       const userId = token.userId;
       let user = await User.findOne(userId);
-      User.update(userId, {role : Role.User});
+      const role = user.role.concat(Role.VerifiedUser);
+      User.update(userId, {role : role});
   
       return "Your account has been activated";
   

@@ -1,10 +1,8 @@
 import { Contains, IsEmail, IsNotEmpty } from "class-validator";
 
-export class LoginDto {
+export class EmailVerificationDto {
   @IsEmail()
   @Contains('@eleve.isep.fr')
-  email: string;
-
   @IsNotEmpty()
-  password: string;
+  email: string;
 }

@@ -1,6 +1,6 @@
 export enum Role {
   User = "user",
-  VerifiedUser = "verified-user",
+  VerifiedUser = "verified",
   ListMember = "list-member",
   Admin = "admin",
 }

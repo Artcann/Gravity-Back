@@ -5,7 +5,6 @@ export class CreateUserDto {
   @Contains('@eleve.isep.fr')
   email: string;
 
-  @IsNotEmpty()
   password: string;
 
   username?: string;
