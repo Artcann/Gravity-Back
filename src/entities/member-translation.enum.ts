@@ -1,9 +1,9 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { LanguageEnum } from "./enums/language.enum";
-import { Event } from "./event.entity";
+import { Member } from "./member.entity";
 
 @Entity()
-export class EventTranslation extends BaseEntity {
+export class MemberTranslation extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -14,15 +14,9 @@ export class EventTranslation extends BaseEntity {
     isDefault: boolean;
 
     @Column()
-    short_desc: string;
+    description: string;
 
-    @Column()
-    long_desc: string;
-
-    @Column()
-    title: string;
-
-    @ManyToOne(() => Event, event => event.translation)
-    event: Event
+    @ManyToOne(() => Member, member => member.translation)
+    member: Member;
 
 }

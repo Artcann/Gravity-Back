@@ -18,6 +18,12 @@ import { EventService } from './services/event.service';
 import { Token } from './entities/token.entity';
 import { User } from './entities/user.entity';
 import { Event } from './entities/event.entity';
+import { EventTranslation } from './entities/event-translation.entity';
+import { SponsorTranslation } from './entities/sponsor-translation.entity';
+import { QuaranteMilleEuros } from './entities/sponsor.entity';
+import { Member } from './entities/member.entity';
+import { MemberTranslation } from './entities/member-translation.enum';
+import { Presentation } from './entities/presentation.entity';
 
 @Module({
   imports: [
@@ -33,7 +39,8 @@ import { Event } from './entities/event.entity';
     ssl: {
       rejectUnauthorized: false,
     },
-    entities: [User, Token, Event],
+    entities: [User, Token, Event, EventTranslation, Member, MemberTranslation,
+    QuaranteMilleEuros, SponsorTranslation, Presentation],
     synchronize: true,
     autoLoadEntities: true,
   })],

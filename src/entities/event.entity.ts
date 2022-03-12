@@ -1,7 +1,7 @@
 import { BaseEntity, BeforeInsert, Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { EventTranslation } from "./event-translation.entity";
 import { User } from "./user.entity";
-import { Geometry } from 'geojson';
+import { Geometry, Point } from 'geojson';
 
 @Entity()
 export class Event extends BaseEntity {
@@ -14,7 +14,7 @@ export class Event extends BaseEntity {
   @Column()
   date: Date;
 
-  @Column()
+  @Column("geometry")
   location: Geometry;
 
   @Column()
