@@ -10,10 +10,12 @@ import { LocalStrategy } from './guards/local.strategy';
 import { UserController } from './controllers/user.controller';
 import { AuthController } from './controllers/auth.controller';
 import { EventController } from './controllers/event.controller';
+import { StaticController } from './controllers/static.controller';
 
 import { UserService } from './services/user.service';
 import { AuthService } from './services/auth.service';
 import { EventService } from './services/event.service';
+import { StaticService } from './services/static.service';
 
 import { Token } from './entities/token.entity';
 import { User } from './entities/user.entity';
@@ -24,6 +26,8 @@ import { QuaranteMilleEuros } from './entities/sponsor.entity';
 import { Member } from './entities/member.entity';
 import { MemberTranslation } from './entities/member-translation.enum';
 import { Presentation } from './entities/presentation.entity';
+
+
 
 @Module({
   imports: [
@@ -44,7 +48,7 @@ import { Presentation } from './entities/presentation.entity';
     synchronize: true,
     autoLoadEntities: true,
   })],
-  controllers: [AuthController, UserController, EventController],
-  providers: [AuthService, UserService, EventService, JwtStrategy, LocalStrategy],
+  controllers: [AuthController, UserController, EventController, StaticController],
+  providers: [AuthService, UserService, EventService, StaticService, JwtStrategy, LocalStrategy],
 })
 export class AppModule {}

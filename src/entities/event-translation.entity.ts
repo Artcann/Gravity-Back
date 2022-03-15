@@ -7,7 +7,10 @@ export class EventTranslation extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({
+        type: "enum",
+        enum: LanguageEnum
+    })
     language: LanguageEnum;
 
     @Column()

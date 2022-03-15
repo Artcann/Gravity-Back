@@ -1,4 +1,5 @@
 import { HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
+import { Point } from "geojson";
 import { CreateEventDto } from "src/dto/event/create-event.dto";
 import { UpdateEventDto } from "src/dto/event/update-event.dto";
 import { Event } from "src/entities/event.entity";
@@ -7,8 +8,14 @@ import { UpdateResult } from "typeorm";
 @Injectable()
 export class EventService {
 
-  create(createEventDto: CreateEventDto) {
-    const event = Event.create(createEventDto);
+  create(createEventDto: CreateEventDto, filePath: string) {
+
+    const location: Point = {
+      type: "Point",
+      coordinates: [createEventDto.longitude, createEventDto.latitude]
+    }
+
+    const event = Event.create({...createEventDto, image: filePath, location: location});
 
     event.save();
 

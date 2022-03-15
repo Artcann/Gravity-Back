@@ -8,7 +8,7 @@ export class Event extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({nullable: true})
   image: string;
 
   @Column()
@@ -29,7 +29,7 @@ export class Event extends BaseEntity {
   @Column()
   open: boolean;
 
-  @OneToMany(() => EventTranslation, eventTranslation => eventTranslation.event)
+  @OneToMany(() => EventTranslation, eventTranslation => eventTranslation.event, {cascade: true, eager: true})
   translation: EventTranslation[];
 
   @ManyToMany(() => User)
