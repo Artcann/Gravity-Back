@@ -15,10 +15,10 @@ export class Member extends BaseEntity {
     @Column()
     nickname: string;
 
-    @Column()
-    picture: string;
+    @Column({nullable: true})
+    image: string;
 
-    @OneToMany(() => MemberTranslation, memberTranslation => memberTranslation.member)
+    @OneToMany(() => MemberTranslation, memberTranslation => memberTranslation.member, {cascade: true, eager: true})
     translation: MemberTranslation[];
 
 }

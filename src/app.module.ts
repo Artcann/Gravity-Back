@@ -11,11 +11,13 @@ import { UserController } from './controllers/user.controller';
 import { AuthController } from './controllers/auth.controller';
 import { EventController } from './controllers/event.controller';
 import { StaticController } from './controllers/static.controller';
+import { MemberController } from './controllers/member.controller';
 
 import { UserService } from './services/user.service';
 import { AuthService } from './services/auth.service';
 import { EventService } from './services/event.service';
 import { StaticService } from './services/static.service';
+import { MemberService } from './services/member.service';
 
 import { Token } from './entities/token.entity';
 import { User } from './entities/user.entity';
@@ -48,7 +50,8 @@ import { Presentation } from './entities/presentation.entity';
     synchronize: true,
     autoLoadEntities: true,
   })],
-  controllers: [AuthController, UserController, EventController, StaticController],
-  providers: [AuthService, UserService, EventService, StaticService, JwtStrategy, LocalStrategy],
+  controllers: [AuthController, UserController, EventController, MemberController, StaticController],
+  providers: [AuthService, UserService, EventService, StaticService, MemberService,
+    JwtStrategy, LocalStrategy],
 })
 export class AppModule {}

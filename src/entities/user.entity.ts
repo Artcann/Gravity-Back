@@ -26,7 +26,7 @@ export class User extends BaseEntity {
   @Column()
   description: string;
 
-  @Column()
+  @Column({nullable: true})
   profile_picture: string;
 
   @Column()
