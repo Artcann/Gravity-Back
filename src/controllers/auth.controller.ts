@@ -1,14 +1,13 @@
 import { UserService } from './../services/user.service';
 import { AuthService } from './../services/auth.service';
-import { Controller, Get, Post, Body, Request, UseGuards} from '@nestjs/common';
+import { Controller, Get, Post, Body, Request, UseGuards, HttpStatus, NotFoundException} from '@nestjs/common';
 import { randomBytes } from 'crypto';
 import { CreateUserDto } from 'src/dto/user/create-user.dto';
 import { Token } from 'src/entities/token.entity';
 import { User } from 'src/entities/user.entity';
-import { Role } from 'src/entities/enums/role.enum';
 import { LocalAuthGuard } from 'src/guards/local-auth.guard';
-import { EmailVerificationDto } from 'src/dto/auth/emailVerification.dto';
-import { MailLoginGuard } from 'src/guards/mail-login.guard';
+import { RoleEnum } from 'src/entities/enums/role.enum';
+import { Role } from 'src/entities/role.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -18,6 +17,7 @@ export class AuthController {
   
     @Post('signup')
     async signup(@Body() createUserDto: CreateUserDto) {
+
       const user = await this.userService.create(createUserDto);
       const token = Token.create({userId: user.id, token: randomBytes(16).toString('hex')});
       Token.save(token);
@@ -25,6 +25,8 @@ export class AuthController {
       this.authService.sendVerificationMail(user, token);
   
       return user;
+
+      
     }
   
     @Get('confirmation/:token')
@@ -32,10 +34,22 @@ export class AuthController {
       const token = await Token.findOne({ token: req.params.token });
       const userId = token.userId;
       let user = await User.findOne(userId);
-      const role = user.role.concat(Role.VerifiedUser);
-      User.update(userId, {role : role});
-  
-      return "Your account has been activated";
+      if(!user) {
+        throw new NotFoundException({
+          status: HttpStatus.NOT_FOUND,
+          message: "User not found"
+        })
+      }
+      const verifiedRole = await Role.findOne({roleLabel: RoleEnum.VerifiedUser});
+      if(user.role.includes(verifiedRole)) {
+        return "Your account is already activated"
+      } else {
+        user.role.push(verifiedRole);
+        user.save();
+    
+        return "Your account has been activated";
+      }
+      
   
     }
   
