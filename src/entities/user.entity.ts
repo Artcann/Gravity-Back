@@ -11,6 +11,12 @@ export class User extends BaseEntity {
   @Column({nullable: true})
   username: string;
 
+  @Column({nullable: true})
+  first_name: string;
+
+  @Column({nullable: true})
+  last_name: string;
+
   @Column({nullable: false})
   password: string;
 
@@ -33,7 +39,7 @@ export class User extends BaseEntity {
   @Column({nullable: true})
   phone_number: string;
 
-  @Column()
+  @Column({nullable: true})
   promo: string;
 
   @BeforeInsert()
