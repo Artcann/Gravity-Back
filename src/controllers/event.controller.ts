@@ -1,9 +1,12 @@
 import { Body, Controller, Delete, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { Roles } from 'src/decorators/roles.decorator';
 import { CreateEventDto } from 'src/dto/event/create-event.dto';
 import { UpdateEventDto } from 'src/dto/event/update-event.dto';
+import { RoleEnum } from 'src/entities/enums/role.enum';
 import { Event } from 'src/entities/event.entity';
+import { Role } from 'src/entities/role.entity';
 import { EventService } from 'src/services/event.service';
 import { UpdateResult } from 'typeorm';
 
@@ -11,6 +14,7 @@ import { UpdateResult } from 'typeorm';
 export class EventController {
   constructor(private eventService: EventService) {};
 
+  @Roles(RoleEnum.ListMember)
   @Post('create')
   @UseInterceptors(FileInterceptor('image', {
     storage: diskStorage({
@@ -25,16 +29,19 @@ export class EventController {
     return this.eventService.create(createEventDto, image ? image.filename : null);
   }
 
+  @Roles(RoleEnum.VerifiedUser)
   @Get(':id')
   read(@Param('id') id: string) {
     return this.eventService.read(id);
   }
 
+  @Roles(RoleEnum.ListMember)
   @Post('update/:id')
   update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto): Promise<UpdateResult>  {
     return this.eventService.update(id, updateEventDto);
   }
 
+  @Roles(RoleEnum.ListMember)
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.eventService.delete(id);

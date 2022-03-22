@@ -1,7 +1,7 @@
-import { BaseEntity, BeforeInsert, Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { BaseEntity, BeforeInsert, Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable, ManyToOne } from "typeorm";
 import * as bcrypt from "bcryptjs";
-import { Role } from "./enums/role.enum";
 import { LanguageEnum } from "./enums/language.enum";
+import { Role } from "./role.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -17,20 +17,24 @@ export class User extends BaseEntity {
   @Column({unique: true})
   email: string;
 
-  @Column({default: Role.User})
-  role: string;
+  @ManyToMany(() => Role, {cascade: true, eager: true})
+  @JoinTable()
+  role: Role[];
 
   @Column({default: LanguageEnum.FR})
   language: string;
 
-  @Column()
+  @Column({nullable: true})
   description: string;
 
   @Column({nullable: true})
   profile_picture: string;
 
-  @Column()
+  @Column({nullable: true})
   phone_number: string;
+
+  @Column()
+  promo: string;
 
   @BeforeInsert()
   async hashPassword() {

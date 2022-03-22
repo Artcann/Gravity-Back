@@ -1,12 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from 'src/dto/user/create-user.dto';
+import { RoleEnum } from 'src/entities/enums/role.enum';
+import { Role } from 'src/entities/role.entity';
 import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class UserService {
   
   async create(createUserDto: CreateUserDto) {
+    createUserDto.email = createUserDto.email.toLocaleLowerCase();
+
     const user = User.create(createUserDto);
+
+    const baseRole = await Role.findOne({roleLabel : RoleEnum.User});
+
+    user.role = [baseRole];
     await user.save();
 
     delete user.password;
@@ -14,6 +22,12 @@ export class UserService {
   }
 
   async findOne(email: string): Promise<User | undefined> {
-    return User.findOne({email: email});
+    return User.findOne({email: email.toLocaleLowerCase()});
+  }
+
+  async findOneWithoutPass(email: string): Promise<User | undefined> {
+    let user = await User.findOne({email: email.toLocaleLowerCase()});
+    delete user.password;
+    return user;
   }
 }

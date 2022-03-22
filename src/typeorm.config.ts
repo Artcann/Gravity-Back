@@ -9,16 +9,17 @@ import { QuaranteMilleEuros } from './entities/sponsor.entity';
 import { Member } from './entities/member.entity';
 import { MemberTranslation } from './entities/member-translation.enum';
 import { Presentation } from './entities/presentation.entity';
+import { Role } from "./entities/role.entity";
 
 const typeOrmConfig : TypeOrmModuleOptions = {
     type: 'postgres',
-    host: process.env.POSTGRES_HOST || 'postgres-db',
+    host: process.env.POSTGRES_HOST,
     port: +process.env.POSTGRES_PORT || 5432,
-    username: process.env.DB_USERNAME || 'postgres',
-    password: process.env.DB_PASSWORD || 'postgres',
+    username: process.env.POSTGRES_USERNAME || 'postgres',
+    password: process.env.POSTGRES_PASSWORD || 'postgres',
     database: process.env.POSTGRES_DB || 'friendly_meme',
     entities: [User, Token, Event, EventTranslation, Member, MemberTranslation,
-    QuaranteMilleEuros, SponsorTranslation, Presentation],
+    QuaranteMilleEuros, SponsorTranslation, Presentation, Role],
     synchronize: true,
     autoLoadEntities: true,
 }

@@ -4,9 +4,11 @@ import { createTransport } from 'nodemailer'
 import { JwtService } from '@nestjs/jwt';
 import { Token } from 'src/entities/token.entity';
 import { User } from 'src/entities/user.entity';
-import { Role } from 'src/entities/enums/role.enum';
+import { RoleEnum } from 'src/entities/enums/role.enum';
 import { EmailVerificationDto } from 'src/dto/auth/emailVerification.dto';
 import { google } from 'googleapis';
+import { Role } from 'src/entities/role.entity';
+import { Roles } from 'src/decorators/roles.decorator';
 
 @Injectable()
 export class AuthService {
@@ -18,22 +20,23 @@ export class AuthService {
   }
 
   async login(user: User) {
-    const payload = { email: user.email, sub: user.id };
+    const payload = { email: user.email.toLocaleLowerCase(), sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };
   }
 
   async mailLogin(emailVerificationDto: EmailVerificationDto) {
-    const user = await this.userService.findOne(emailVerificationDto.email);
+    const user = await this.userService.findOne(emailVerificationDto.email.toLocaleLowerCase());
+    const verifiedRole = await Role.findOne({roleLabel : RoleEnum.VerifiedUser});
 
-    if(!(user.role.includes(Role.VerifiedUser))) {
+    if(!(user.role.includes(verifiedRole))) {
       throw new UnauthorizedException({
         status: HttpStatus.UNAUTHORIZED,
         message: "Your account is not verified"
       })
     } else {
-      const payload = { email: emailVerificationDto.email };
+      const payload = { email: emailVerificationDto.email.toLocaleLowerCase() };
       return {
         access_token: this.jwtService.sign(payload),
       }
@@ -42,18 +45,19 @@ export class AuthService {
   }
 
   async validateUser(email: string, pass: string): Promise<any> {
-    const user = await this.userService.findOne(email);
+    const user = await this.userService.findOne(email.toLocaleLowerCase());
+
     if (!user) {
       throw new UnauthorizedException({
         status: HttpStatus.UNAUTHORIZED,
         message: "User not found"
       })
-    } else if (!(user.role?.includes(Role.VerifiedUser))){
+    } else if (!(user.role.some(e => e.roleLabel === RoleEnum.VerifiedUser))){
       throw new UnauthorizedException({
         status: HttpStatus.UNAUTHORIZED,
         message: "Your account is not verified"
       })
-    } else if (user && await user.validatePassword(pass) && (user.role?.includes(Role.User))) {
+    } else if (user && await user.validatePassword(pass) && (user.role.some(e => e.roleLabel === RoleEnum.VerifiedUser))) {
       const { password, ...result } = user;
       return result;
     }
@@ -69,7 +73,7 @@ export class AuthService {
         from: "service@gravity.com",
         to: user.email,
         subject: "Verification Mail",
-        text: "http://localhost:3000/auth/confirmation/" + token.token,
+        text: process.env.API_URL + "auth/confirmation/" + token.token,
       })
     } catch (err) {
       console.error(err);
