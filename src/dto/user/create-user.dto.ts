@@ -1,4 +1,5 @@
-import { Contains, IsEmail, IsNotEmpty } from "class-validator";
+import { Contains, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber, IsString } from "class-validator";
+import { LanguageEnum } from "src/entities/enums/language.enum";
 
 export class CreateUserDto {
   @IsEmail()
@@ -8,4 +9,15 @@ export class CreateUserDto {
   password: string;
 
   username?: string;
+
+  @IsEnum(LanguageEnum)
+  language: LanguageEnum;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsPhoneNumber("FR")
+  phone_number?: string;
 }

@@ -10,20 +10,18 @@ import { LocalStrategy } from './guards/local.strategy';
 import { UserController } from './controllers/user.controller';
 import { AuthController } from './controllers/auth.controller';
 import { EventController } from './controllers/event.controller';
+import { StaticController } from './controllers/static.controller';
+import { MemberController } from './controllers/member.controller';
 
 import { UserService } from './services/user.service';
 import { AuthService } from './services/auth.service';
 import { EventService } from './services/event.service';
+import { StaticService } from './services/static.service';
+import { MemberService } from './services/member.service';
 
-import { Token } from './entities/token.entity';
-import { User } from './entities/user.entity';
-import { Event } from './entities/event.entity';
-import { EventTranslation } from './entities/event-translation.entity';
-import { SponsorTranslation } from './entities/sponsor-translation.entity';
-import { QuaranteMilleEuros } from './entities/sponsor.entity';
-import { Member } from './entities/member.entity';
-import { MemberTranslation } from './entities/member-translation.enum';
-import { Presentation } from './entities/presentation.entity';
+import * as typeOrmConfig from './typeorm.config';
+
+
 
 @Module({
   imports: [
@@ -31,20 +29,11 @@ import { Presentation } from './entities/presentation.entity';
   PassportModule,
   JwtModule.register({
     secret: process.env.JWT_SECRET,
-    signOptions: { expiresIn: '24h' },
+    signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
   }),
-  TypeOrmModule.forRoot({
-    type: 'postgres',
-    url: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false,
-    },
-    entities: [User, Token, Event, EventTranslation, Member, MemberTranslation,
-    QuaranteMilleEuros, SponsorTranslation, Presentation],
-    synchronize: true,
-    autoLoadEntities: true,
-  })],
-  controllers: [AuthController, UserController, EventController],
-  providers: [AuthService, UserService, EventService, JwtStrategy, LocalStrategy],
+  TypeOrmModule.forRoot(typeOrmConfig)],
+  controllers: [AuthController, UserController, EventController, MemberController, StaticController],
+  providers: [AuthService, UserService, EventService, StaticService, MemberService,
+    JwtStrategy, LocalStrategy],
 })
 export class AppModule {}
