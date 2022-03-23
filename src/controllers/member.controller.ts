@@ -47,7 +47,7 @@ export class MemberController {
         })
     }))
     update(@Param('id') id: string, @Body() updateMemberDto: UpdateMemberDto,
-    image: Express.Multer.File): Promise<UpdateResult> {
+    @UploadedFile() image: Express.Multer.File): Promise<UpdateResult> {
         return this.memberService.update(id, updateMemberDto, image ? image.filename : null);
     }
 

@@ -12,4 +12,7 @@ export class Presentation extends BaseEntity {
 
     @Column()
     language: LanguageEnum;
+
+    @Column()
+    content: string;
 }

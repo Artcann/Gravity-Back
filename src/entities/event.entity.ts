@@ -26,10 +26,12 @@ export class Event extends BaseEntity {
   @Column()
   location_subtitle: string;
 
-  @Column()
+  @Column({
+    type: "boolean"
+  })
   open: boolean;
 
-  @OneToMany(() => EventTranslation, eventTranslation => eventTranslation.event, {cascade: true, eager: true})
+  @OneToMany(() => EventTranslation, eventTranslation => eventTranslation.event, { cascade: true, eager: true})
   translation: EventTranslation[];
 
   @ManyToMany(() => User)

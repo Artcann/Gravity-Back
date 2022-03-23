@@ -1,5 +1,6 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { SocialNetworkEnum } from "./enums/social-network.enum";
+import { User } from "./user.entity";
 
 @Entity()
 export class SocialNetwork extends BaseEntity {
@@ -14,4 +15,8 @@ export class SocialNetwork extends BaseEntity {
 
     @Column({default: false})
     public: boolean;
+
+    @ManyToMany(() => User)
+    @JoinTable()
+    user: User[];
 }

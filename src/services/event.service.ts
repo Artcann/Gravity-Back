@@ -2,8 +2,8 @@ import { HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { Point } from "geojson";
 import { CreateEventDto } from "src/dto/event/create-event.dto";
 import { UpdateEventDto } from "src/dto/event/update-event.dto";
+import { LanguageEnum } from "src/entities/enums/language.enum";
 import { Event } from "src/entities/event.entity";
-import { UpdateResult } from "typeorm";
 
 @Injectable()
 export class EventService {
@@ -39,5 +39,12 @@ export class EventService {
         message: "Event not found in database. Check if the id you entered is correct"
       })
     }
+  }
+
+  getOpenEvent(language: string): Promise<Event[]>{
+    return Event.createQueryBuilder('event')
+      .innerJoinAndSelect('event.translation', 'translation')
+      .where("translation.language = :language AND open = true", {language})
+      .getMany();
   }
 }

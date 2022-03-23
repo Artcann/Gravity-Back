@@ -39,3 +39,5 @@ mailer-key.json
 
 /pgdata
 /pgadmin-data
+
+/ressources/images
