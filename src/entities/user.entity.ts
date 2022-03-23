@@ -2,6 +2,7 @@ import { BaseEntity, BeforeInsert, Column, Entity, PrimaryGeneratedColumn, OneTo
 import * as bcrypt from "bcryptjs";
 import { LanguageEnum } from "./enums/language.enum";
 import { Role } from "./role.entity";
+import { SocialNetwork } from "./social-network.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -23,10 +24,6 @@ export class User extends BaseEntity {
   @Column({unique: true})
   email: string;
 
-  @ManyToMany(() => Role, {cascade: true, eager: true})
-  @JoinTable()
-  role: Role[];
-
   @Column({default: LanguageEnum.FR})
   language: string;
 
@@ -41,6 +38,17 @@ export class User extends BaseEntity {
 
   @Column({nullable: true})
   promo: string;
+
+  @Column({ nullable: true })
+  address: string;
+
+  @ManyToMany(() => Role, {cascade: true, eager: true})
+  @JoinTable()
+  role: Role[];
+
+  @ManyToMany(() => SocialNetwork, {cascade: true, eager: true})
+  @JoinTable()
+  socials: SocialNetwork[]
 
   @BeforeInsert()
   async hashPassword() {
