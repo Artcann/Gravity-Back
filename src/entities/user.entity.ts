@@ -3,6 +3,7 @@ import * as bcrypt from "bcryptjs";
 import { LanguageEnum } from "./enums/language.enum";
 import { Role } from "./role.entity";
 import { SocialNetwork } from "./social-network.entity";
+import { Event } from "./event.entity"
 
 @Entity()
 export class User extends BaseEntity {

@@ -1,9 +1,10 @@
-import { HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { Point } from "geojson";
 import { CreateEventDto } from "src/dto/event/create-event.dto";
 import { UpdateEventDto } from "src/dto/event/update-event.dto";
 import { LanguageEnum } from "src/entities/enums/language.enum";
 import { Event } from "src/entities/event.entity";
+import { User } from "src/entities/user.entity";
 
 @Injectable()
 export class EventService {
@@ -46,5 +47,37 @@ export class EventService {
       .innerJoinAndSelect('event.translation', 'translation')
       .where("translation.language = :language AND open = true", {language})
       .getMany();
+  }
+
+  getAllEvent(language: string): Promise<Event[]> {
+    return Event.createQueryBuilder('event')
+      .innerJoinAndSelect('event.translation', 'translation')
+      .where("translation.language = :language", {language})
+      .getMany();
+  }
+
+  async inscription(eventId: string, userId: string) {
+    const event = await Event.findOne(eventId);
+    const user = await User.findOne(userId);
+
+    if(!event.open) {
+      throw new BadRequestException({
+        message: "The event you're trying to access is closed"
+      })
+    }
+
+    if(!event.registered_user) {
+      event.registered_user = [user];
+    } else if(event.registered_user.some(registredUser => registredUser.id === user.id)) {
+      delete event.registered_user[event.registered_user.findIndex(registredUser => registredUser.id === user.id )];
+    } else {
+      event.registered_user = [...event.registered_user, user];
+    }
+
+    event.save();
+
+    return event.registered_user.some(registredUser => registredUser.id === user.id) 
+    ? {"status": "subscribed"} 
+    : {"status": "unsubscribed"};
   }
 }
