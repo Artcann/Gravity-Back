@@ -2,6 +2,7 @@ import { HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { Point } from "geojson";
 import { CreateSponsorDto } from "src/dto/sponsor/create-sponsor.dto";
 import { UpdateSponsorDto } from "src/dto/sponsor/update-sponsor.dto";
+import { SponsorTypeEnum } from "src/entities/enums/sponsor-type.enum";
 import { QuaranteMilleEuros } from "src/entities/sponsor.entity";
 
 @Injectable()
@@ -22,6 +23,22 @@ export class SponsorService {
 
     read(id: string) {
         return QuaranteMilleEuros.findOne(id);
+    }
+
+    getClassicSponsors() {
+        return QuaranteMilleEuros.find({
+            where: {
+                type: SponsorTypeEnum.CLASSIC
+            }
+        });
+    }
+
+    getFoodSponsors() {
+        return QuaranteMilleEuros.find({
+            where: {
+                type: SponsorTypeEnum.FOOD
+            }
+        })
     }
 
     update(id: string, updateSponsorDto: UpdateSponsorDto) {

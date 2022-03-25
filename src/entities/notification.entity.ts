@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Group } from "./group.entity";
 
 @Entity()
@@ -9,5 +9,11 @@ export class Notification extends BaseEntity {
     @ManyToMany(() => Group)
     @JoinTable()
     groups: Group[];
+
+    @Column()
+    content: string;
+
+    @Column()
+    isNew: boolean;
 
 }
