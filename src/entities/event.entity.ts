@@ -34,7 +34,7 @@ export class Event extends BaseEntity {
   @OneToMany(() => EventTranslation, eventTranslation => eventTranslation.event, { cascade: true, eager: true})
   translation: EventTranslation[];
 
-  @ManyToMany(() => User)
+  @ManyToMany(() => User, {cascade: true, eager: true})
   @JoinTable()
   registered_user: User[];
 }

@@ -30,6 +30,18 @@ export class SponsorController {
     }
 
     @Roles(RoleEnum.VerifiedUser)
+    @Get('all')
+    getClassicSponsor() {
+        return this.sponsorService.getClassicSponsors();
+    }
+
+    @Roles(RoleEnum.VerifiedUser)
+    @Get('/food/all')
+    getFoodSponsors() {
+        return this.sponsorService.getFoodSponsors()
+    }
+
+    @Roles(RoleEnum.VerifiedUser)
     @Get(':id')
     read(@Param('id') id: string) {
         return this.sponsorService.read(id);

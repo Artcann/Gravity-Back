@@ -24,10 +24,4 @@ export class UserService {
   async findOne(email: string): Promise<User | undefined> {
     return User.findOne({email: email.toLocaleLowerCase()});
   }
-
-  async findOneWithoutPass(email: string): Promise<User | undefined> {
-    let user = await User.findOne({email: email.toLocaleLowerCase()});
-    delete user.password;
-    return user;
-  }
 }

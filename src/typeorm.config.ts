@@ -11,6 +11,8 @@ import { MemberTranslation } from './entities/member-translation.enum';
 import { Presentation } from './entities/presentation.entity';
 import { Role } from "./entities/role.entity";
 import { SocialNetwork } from "./entities/social-network.entity";
+import { Notification } from "./entities/notification.entity";
+import { Group } from "./entities/group.entity";
 
 const typeOrmConfig : TypeOrmModuleOptions = {
     type: 'postgres',
@@ -20,7 +22,7 @@ const typeOrmConfig : TypeOrmModuleOptions = {
     password: process.env.POSTGRES_PASSWORD || 'postgres',
     database: process.env.POSTGRES_DB || 'friendly_meme',
     entities: [User, Token, Event, EventTranslation, Member, MemberTranslation,
-    QuaranteMilleEuros, SponsorTranslation, Presentation, Role, SocialNetwork],
+    QuaranteMilleEuros, SponsorTranslation, Presentation, Role, SocialNetwork, Notification, Group],
     synchronize: true,
     autoLoadEntities: true
 }

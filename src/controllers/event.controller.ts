@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { Roles } from 'src/decorators/roles.decorator';
@@ -30,6 +30,15 @@ export class EventController {
     return this.eventService.create(createEventDto, image ? image.filename : null);
   }
 
+
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(RoleEnum.VerifiedUser)
+  @Get('all')
+  getAllEvent(@Request() req): Promise<Event[]> {
+    return this.eventService.getAllEvent(req.user.lang);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Roles(RoleEnum.VerifiedUser)
   @Get('open')
@@ -37,18 +46,32 @@ export class EventController {
     return this.eventService.getOpenEvent(req.user.lang);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles(RoleEnum.VerifiedUser)
+  @Get('inscription/:id')
+  inscription(@Param('id') id: string, @Request() req) {
+    return this.eventService.inscription(id, req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Roles(RoleEnum.VerifiedUser)
   @Get(':id')
   read(@Param('id') id: string) {
     return this.eventService.read(id);
   }
 
+
+
+  @UseGuards(JwtAuthGuard)
   @Roles(RoleEnum.ListMember)
   @Post('update/:id')
   update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto): Promise<UpdateResult>  {
     return this.eventService.update(id, updateEventDto);
   }
 
+
+
+  @UseGuards(JwtAuthGuard)
   @Roles(RoleEnum.ListMember)
   @Delete(':id')
   delete(@Param('id') id: string) {

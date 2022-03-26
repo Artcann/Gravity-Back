@@ -1,3 +1,4 @@
+import { IsEnum } from "class-validator";
 import { Geometry } from "geojson";
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { SponsorTypeEnum } from "./enums/sponsor-type.enum";
@@ -9,6 +10,7 @@ export class QuaranteMilleEuros extends BaseEntity {
     id: number;
 
     @Column()
+    @IsEnum(SponsorTypeEnum)
     type: SponsorTypeEnum;
 
     @Column()
