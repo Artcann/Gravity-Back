@@ -19,7 +19,7 @@ export class QuaranteMilleEuros extends BaseEntity {
     @Column()
     link: string;
 
-    @Column()
+    @Column({nullable: true})
     picture: string;
 
     @Column("geometry")

@@ -42,15 +42,6 @@ export class MemberController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.ListMember)
     @Post('update/:id')
-    @UseInterceptors(FileInterceptor('image', {
-        storage: diskStorage({
-            destination: './ressources/images/',
-            filename: (req, file, cb) => {
-            const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
-            cb(null, file.fieldname + "-" + uniqueSuffix + ".jpg");
-            }
-        })
-    }))
     update(@Param('id') id: string, @Body() updateMemberDto: UpdateMemberDto,
     @UploadedFile() image: Express.Multer.File): Promise<UpdateResult> {
         return this.memberService.update(id, updateMemberDto, image ? image.filename : null);

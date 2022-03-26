@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsEnum, IsLatitude, IsLongitude, IsString, IsUrl, ValidateNested } from "class-validator";
+import { IsDataURI, IsEnum, IsLatitude, IsLongitude, IsOptional, IsString, IsUrl, ValidateNested } from "class-validator";
 import { SponsorTypeEnum } from "src/entities/enums/sponsor-type.enum";
 import { SponsorTranslationDto } from "./sponsor-translation.dto";
 
@@ -18,6 +18,10 @@ export class CreateSponsorDto {
 
     @IsLongitude()
     longitude: number;
+
+    @IsOptional()
+    @IsDataURI()
+    image?: string;
 
     @ValidateNested()
     @Type(() => SponsorTranslationDto)

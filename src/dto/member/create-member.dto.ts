@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsString, ValidateNested } from "class-validator";
+import { IsDataURI, IsOptional, IsString, ValidateNested } from "class-validator";
 import { MemberTranslationDto } from "./member-translation.dto";
 
 export class CreateMemberDto {
@@ -11,6 +11,10 @@ export class CreateMemberDto {
 
     @IsString()
     nickname: string;
+
+    @IsOptional()
+    @IsDataURI()
+    image?: string;
 
     @ValidateNested()
     @Type(() => MemberTranslationDto)
