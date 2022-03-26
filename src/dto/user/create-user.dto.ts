@@ -1,4 +1,4 @@
-import { Contains, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber, IsString } from "class-validator";
+import { Contains, IsDataURI, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber, IsString } from "class-validator";
 import { GroupEnum } from "src/entities/enums/group.enum";
 import { LanguageEnum } from "src/entities/enums/language.enum";
 
@@ -32,4 +32,8 @@ export class CreateUserDto {
   @IsOptional()
   @IsString()
   last_name?: string;
+
+  @IsOptional()
+  @IsDataURI()
+  profile_picture?: string;
 }

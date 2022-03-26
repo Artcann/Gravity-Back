@@ -19,15 +19,6 @@ export class EventController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleEnum.ListMember)
   @Post('create')
-  @UseInterceptors(FileInterceptor('image', {
-    storage: diskStorage({
-      destination: './ressources/images/',
-      filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + "-" + uniqueSuffix + ".jpg");
-      }
-    })
-  }))
   create(@Body() createEventDto: CreateEventDto, @UploadedFile() image: Express.Multer.File): Event {
     return this.eventService.create(createEventDto, image ? image.filename : null);
   }

@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsBoolean, IsDate, IsDateString, IsLatitude, IsLongitude, IsNotEmpty, ValidateNested } from "class-validator";
+import { IsBoolean, IsDataURI, IsDate, IsDateString, IsLatitude, IsLongitude, IsNotEmpty, IsOptional, ValidateNested } from "class-validator";
 import { EventTranslationDto } from "./event-translation.dto";
 
 export class CreateEventDto {
@@ -23,6 +23,10 @@ export class CreateEventDto {
 
   @IsBoolean()
   open: boolean;
+
+  @IsOptional()
+  @IsDataURI()
+  image?: string;
 
   @ValidateNested()
   @Type(() => EventTranslationDto)

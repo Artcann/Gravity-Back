@@ -19,15 +19,6 @@ export class SponsorController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.ListMember)
     @Post('create')
-    @UseInterceptors(FileInterceptor('image', {
-        storage: diskStorage({
-            destination: './ressources/images/',
-            filename: (req, file, cb) => {
-            const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
-            cb(null, file.fieldname + "-" + uniqueSuffix + ".jpg");
-            }
-        })
-    }))
     create(@Body() createSponsorDto: CreateSponsorDto, @UploadedFile() image: Express.Multer.File): QuaranteMilleEuros {
         return this.sponsorService.create(createSponsorDto, image ? image.filename : null);
     }
