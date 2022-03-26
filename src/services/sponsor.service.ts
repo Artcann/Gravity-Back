@@ -8,14 +8,14 @@ import { QuaranteMilleEuros } from "src/entities/sponsor.entity";
 @Injectable()
 export class SponsorService {
     
-    create(createSponsorDto: CreateSponsorDto, filePath: string) {
+    create(createSponsorDto: CreateSponsorDto) {
 
         const location: Point = {
             type: "Point",
             coordinates: [createSponsorDto.longitude, createSponsorDto.latitude]
         }
 
-        const sponsor = QuaranteMilleEuros.create({...createSponsorDto, picture: filePath, location: location});
+        const sponsor = QuaranteMilleEuros.create({...createSponsorDto, location: location});
         sponsor.save();
 
         return sponsor;

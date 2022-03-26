@@ -19,17 +19,8 @@ export class MemberController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.ListMember)
     @Post('create')
-    @UseInterceptors(FileInterceptor('image', {
-        storage: diskStorage({
-            destination: './ressources/images/',
-            filename: (req, file, cb) => {
-            const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
-            cb(null, file.fieldname + "-" + uniqueSuffix + ".jpg");
-            }
-        })
-    }))
-    create(@Body() createMemberDto: CreateMemberDto, @UploadedFile() image: Express.Multer.File): Member {
-        return this.memberService.create(createMemberDto, image ? image.filename : null);
+    create(@Body() createMemberDto: CreateMemberDto): Member {
+        return this.memberService.create(createMemberDto);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
@@ -42,9 +33,8 @@ export class MemberController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.ListMember)
     @Post('update/:id')
-    update(@Param('id') id: string, @Body() updateMemberDto: UpdateMemberDto,
-    @UploadedFile() image: Express.Multer.File): Promise<UpdateResult> {
-        return this.memberService.update(id, updateMemberDto, image ? image.filename : null);
+    update(@Param('id') id: string, @Body() updateMemberDto: UpdateMemberDto): Promise<UpdateResult> {
+        return this.memberService.update(id, updateMemberDto);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)

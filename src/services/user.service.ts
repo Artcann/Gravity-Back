@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from 'src/dto/user/create-user.dto';
+import { UpdateUserDto } from 'src/dto/user/update-user.dto';
 import { RoleEnum } from 'src/entities/enums/role.enum';
 import { Role } from 'src/entities/role.entity';
 import { User } from 'src/entities/user.entity';
@@ -23,5 +24,9 @@ export class UserService {
 
   async findOne(email: string): Promise<User | undefined> {
     return User.findOne({email: email.toLocaleLowerCase()});
+  }
+
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    User.update(id, updateUserDto);
   }
 }
