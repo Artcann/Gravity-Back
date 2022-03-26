@@ -1,4 +1,4 @@
-import { ClassSerializerInterceptor, Controller, Get, Request, UseGuards, UseInterceptors } from '@nestjs/common';
+import { ClassSerializerInterceptor, Controller, Get, Param, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { get } from 'http';
 import { Roles } from 'src/decorators/roles.decorator';
 import { RoleEnum } from 'src/entities/enums/role.enum';
@@ -14,9 +14,9 @@ export class UserController {
   @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleEnum.VerifiedUser)
-  @Get('profile/public')
-  publicProfile(@Request() req) {
-    return this.userService.findOne(req.user.email);
+  @Get('profile/public/:id')
+  publicProfile(@Param('id') id: string) {
+    return this.userService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

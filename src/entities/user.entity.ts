@@ -3,7 +3,7 @@ import * as bcrypt from "bcryptjs";
 import { LanguageEnum } from "./enums/language.enum";
 import { Role } from "./role.entity";
 import { SocialNetwork } from "./social-network.entity";
-import { Event } from "./event.entity"
+import { Notification } from "./notification.entity";
 import { Exclude } from "class-transformer";
 
 @Entity()
@@ -51,6 +51,10 @@ export class User extends BaseEntity {
   @ManyToMany(() => Role, {cascade: true, eager: true})
   @JoinTable()
   role: Role[];
+
+  @Exclude()
+  @OneToMany(() => Notification, notification => notification.user, {cascade: true, eager: true})
+  notifications: Notification[]
 
   @ManyToMany(() => SocialNetwork, {cascade: true, eager: true})
   @JoinTable()
