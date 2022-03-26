@@ -18,4 +18,12 @@ export class StaticService {
         return null;
         }
     }
+
+    public deleteImage(filename: string) {
+        try {
+            return fs.unlinkSync(path.join(this.baseRoute, filename));
+        } catch(e) {
+            return null;
+        }
+    }
 }

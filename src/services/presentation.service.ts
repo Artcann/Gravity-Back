@@ -25,4 +25,10 @@ export class PresentationService {
     delete(id: string) {
         Presentation.delete(id);
     }
+
+    async getStatus(id: string) {
+        const presentation = await Presentation.findOne(id);
+
+        return presentation.status;
+    }
 }

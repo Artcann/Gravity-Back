@@ -15,4 +15,7 @@ export class Presentation extends BaseEntity {
 
     @Column()
     content: string;
+
+    @Column()
+    status: boolean;
 }
