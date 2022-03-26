@@ -9,14 +9,14 @@ import { User } from "src/entities/user.entity";
 @Injectable()
 export class EventService {
 
-  create(createEventDto: CreateEventDto, filePath: string) {
+  create(createEventDto: CreateEventDto) {
 
     const location: Point = {
       type: "Point",
       coordinates: [createEventDto.longitude, createEventDto.latitude]
     }
 
-    const event = Event.create({...createEventDto, image: filePath, location: location});
+    const event = Event.create({...createEventDto, location: location});
 
     event.save();
 

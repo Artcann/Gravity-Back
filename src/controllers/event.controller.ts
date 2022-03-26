@@ -19,8 +19,8 @@ export class EventController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleEnum.ListMember)
   @Post('create')
-  create(@Body() createEventDto: CreateEventDto, @UploadedFile() image: Express.Multer.File): Event {
-    return this.eventService.create(createEventDto, image ? image.filename : null);
+  create(@Body() createEventDto: CreateEventDto): Event {
+    return this.eventService.create(createEventDto);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

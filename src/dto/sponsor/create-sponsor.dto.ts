@@ -21,7 +21,7 @@ export class CreateSponsorDto {
 
     @IsOptional()
     @IsDataURI()
-    image?: string;
+    picture?: string;
 
     @ValidateNested()
     @Type(() => SponsorTranslationDto)

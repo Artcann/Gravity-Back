@@ -7,8 +7,8 @@ import { UpdateResult } from "typeorm";
 @Injectable()
 export class MemberService {
         
-    create(createMemberDto: CreateMemberDto, filePath: string): Member {
-        const member = Member.create({...createMemberDto, image: filePath});
+    create(createMemberDto: CreateMemberDto): Member {
+        const member = Member.create(createMemberDto);
 
         member.save();
         
@@ -19,8 +19,8 @@ export class MemberService {
         return Member.findOne(id);
     }
 
-    update(id: string, updateMemberDto: UpdateMemberDto, filePath: string): Promise<UpdateResult> {
-        return Member.update(id, {...updateMemberDto, image: filePath});
+    update(id: string, updateMemberDto: UpdateMemberDto): Promise<UpdateResult> {
+        return Member.update(id, updateMemberDto);
     }
 
     delete(id: string) {

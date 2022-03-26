@@ -19,8 +19,8 @@ export class SponsorController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.ListMember)
     @Post('create')
-    create(@Body() createSponsorDto: CreateSponsorDto, @UploadedFile() image: Express.Multer.File): QuaranteMilleEuros {
-        return this.sponsorService.create(createSponsorDto, image ? image.filename : null);
+    create(@Body() createSponsorDto: CreateSponsorDto): QuaranteMilleEuros {
+        return this.sponsorService.create(createSponsorDto);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
