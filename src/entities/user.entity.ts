@@ -4,9 +4,11 @@ import { LanguageEnum } from "./enums/language.enum";
 import { Role } from "./role.entity";
 import { SocialNetwork } from "./social-network.entity";
 import { Event } from "./event.entity"
+import { Exclude } from "class-transformer";
 
 @Entity()
 export class User extends BaseEntity {
+  @Exclude()
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -19,12 +21,14 @@ export class User extends BaseEntity {
   @Column({nullable: true})
   last_name: string;
 
+  @Exclude()
   @Column({nullable: false})
   password: string;
 
   @Column({unique: true})
   email: string;
 
+  @Exclude()
   @Column({default: LanguageEnum.FR})
   language: string;
 
@@ -43,6 +47,7 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   address: string;
 
+  @Exclude()
   @ManyToMany(() => Role, {cascade: true, eager: true})
   @JoinTable()
   role: Role[];

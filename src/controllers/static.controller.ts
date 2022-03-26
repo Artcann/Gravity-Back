@@ -21,16 +21,16 @@ export class StaticController {
 
   @Roles(RoleEnum.VerifiedUser)
   @Post('upload')
-    @UseInterceptors(FileInterceptor('image', {
-        storage: diskStorage({
-            destination: './ressources/images/',
-            filename: (req, file, cb) => {
-            const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
-            cb(null, file.fieldname + "-" + uniqueSuffix + ".jpg");
-            }
-        })
-    }))
-    update(@UploadedFile() image: Express.Multer.File) {
-        return { filename: image.filename };
-    }
+  @UseInterceptors(FileInterceptor('image', {
+      storage: diskStorage({
+          destination: './ressources/images/',
+          filename: (req, file, cb) => {
+          const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
+          cb(null, file.fieldname + "-" + uniqueSuffix + ".jpg");
+          }
+      })
+  }))
+  update(@UploadedFile() image: Express.Multer.File) {
+      return { filename: image.filename };
+  }
 }
