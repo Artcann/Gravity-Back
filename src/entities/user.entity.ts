@@ -5,6 +5,7 @@ import { Role } from "./role.entity";
 import { SocialNetwork } from "./social-network.entity";
 import { Notification } from "./notification.entity";
 import { Exclude } from "class-transformer";
+import { Group } from "./group.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -59,6 +60,10 @@ export class User extends BaseEntity {
   @ManyToMany(() => SocialNetwork, {cascade: true, eager: true})
   @JoinTable()
   socials: SocialNetwork[]
+  
+  @ManyToMany(() => Group)
+  @JoinTable()
+  groups: Group[];
 
   @BeforeInsert()
   async hashPassword() {

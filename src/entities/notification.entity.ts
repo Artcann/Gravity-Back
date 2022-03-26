@@ -7,10 +7,6 @@ export class Notification extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToMany(() => Group)
-    @JoinTable()
-    groups: Group[];
-
     @Column()
     content: string;
 

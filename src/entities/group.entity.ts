@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "./user.entity";
 
 @Entity()
 export class Group extends BaseEntity {
@@ -8,7 +9,7 @@ export class Group extends BaseEntity {
     @Column()
     groupLabel: string;
 
-    @ManyToMany(() => Notification)
+    @ManyToMany(() => User)
     @JoinTable()
-    notifications: Notification[];
+    user: User[];
 }
