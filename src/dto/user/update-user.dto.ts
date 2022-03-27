@@ -1,6 +1,8 @@
-import { Contains, IsDataURI, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { Contains, IsDataURI, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, ValidateNested } from "class-validator";
 import { GroupEnum } from "src/entities/enums/group.enum";
 import { LanguageEnum } from "src/entities/enums/language.enum";
+import { SocialNetwork } from "src/entities/social-network.entity";
 
 export class UpdateUserDto {
     @IsOptional()
@@ -34,6 +36,11 @@ export class UpdateUserDto {
     last_name?: string;
 
     @IsOptional()
-    @IsDataURI()
+    @IsString()
     profile_picture?: string;
+
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => SocialNetwork)
+    socials: SocialNetwork[];
 }

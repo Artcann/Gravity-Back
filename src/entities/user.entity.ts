@@ -60,7 +60,7 @@ export class User extends BaseEntity {
   @OneToMany(() => Notification, notification => notification.user, {cascade: true, eager: true})
   notifications: Notification[]
 
-  @ManyToMany(() => SocialNetwork, {cascade: true, eager: true})
+  @OneToMany(() => SocialNetwork, social => social.user, {cascade: true, eager: true})
   @JoinTable()
   socials: SocialNetwork[]
   
