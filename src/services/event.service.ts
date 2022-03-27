@@ -28,7 +28,16 @@ export class EventService {
   }
 
   update(id: string, updateEventDto: UpdateEventDto){
-    return Event.update(id, updateEventDto);
+    if(updateEventDto.latitude && updateEventDto.longitude) {
+      const location: Point = {
+          type: "Point",
+          coordinates: [updateEventDto.longitude, updateEventDto.latitude]
+      }
+
+      return Event.update(id, {...updateEventDto, location: location});
+  } else {
+      return Event.update(id, updateEventDto);
+  }
   }
 
   delete(id: string) {

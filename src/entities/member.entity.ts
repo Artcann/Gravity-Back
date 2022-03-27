@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { MemberTranslation } from "./member-translation.enum";
+import { MemberTranslation } from "./member-translation.entity";
 
 @Entity()
 export class Member extends BaseEntity {

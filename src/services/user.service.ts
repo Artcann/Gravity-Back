@@ -27,6 +27,6 @@ export class UserService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    User.update(id, updateUserDto);
+    return User.update(id, updateUserDto);
   }
 }

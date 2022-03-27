@@ -13,7 +13,7 @@ export class CreateMemberDto {
     nickname: string;
 
     @IsOptional()
-    @IsDataURI()
+    @IsString()
     image?: string;
 
     @ValidateNested()

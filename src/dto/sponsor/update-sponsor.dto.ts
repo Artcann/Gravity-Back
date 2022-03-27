@@ -26,6 +26,10 @@ export class UpdateSponsorDto {
     longitude?: number;
 
     @IsOptional()
+    @IsString()
+    picture?: string;
+
+    @IsOptional()
     @ValidateNested()
     @Type(() => SponsorTranslationDto)
     translation?: SponsorTranslationDto[]
