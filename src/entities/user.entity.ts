@@ -6,6 +6,9 @@ import { SocialNetwork } from "./social-network.entity";
 import { Notification } from "./notification.entity";
 import { Exclude } from "class-transformer";
 import { Group } from "./group.entity";
+import { ChallengeSubmission } from "./challenge-submission.entity";
+import { ChallengeStatus } from "./challenge-status.entity";
+import { Challenge } from "./challenge.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -57,13 +60,22 @@ export class User extends BaseEntity {
   @OneToMany(() => Notification, notification => notification.user, {cascade: true, eager: true})
   notifications: Notification[]
 
-  @ManyToMany(() => SocialNetwork, {cascade: true, eager: true})
+  @OneToMany(() => SocialNetwork, social => social.user, {cascade: true, eager: true})
   @JoinTable()
   socials: SocialNetwork[]
   
   @ManyToMany(() => Group)
   @JoinTable()
   groups: Group[];
+
+  @OneToMany(() => ChallengeSubmission, challengeSubmission => challengeSubmission.user, {cascade: true, eager: true})
+  challenge_submission: ChallengeSubmission[];
+
+  @OneToMany(() => ChallengeStatus, challengeStatus => challengeStatus.user)
+  challenge_status: ChallengeStatus[];
+
+  @Column("text", { array: true, nullable: true})
+  deviceToken: string[]
 
   @BeforeInsert()
   async hashPassword() {

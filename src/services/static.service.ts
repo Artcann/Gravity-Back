@@ -13,9 +13,9 @@ export class StaticService {
 
     public async getImage(filename: string) {
         try {
-        return fs.createReadStream(path.join(this.baseRoute, filename));
+            return fs.createReadStream(path.join(this.baseRoute, filename));
         } catch (e) {
-        return null;
+            return null;
         }
     }
 

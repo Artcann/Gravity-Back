@@ -20,6 +20,7 @@ export class StaticController {
   @Header('Content-Type', 'image/jpeg')
   public async getImage(@Param('path') path: string, @Res() res: Response){
     const stream = await this.staticService.getImage(path);
+    stream.on("error", (error: any) => {console.log("Caught", error);});
     stream.pipe(res);
   }
 

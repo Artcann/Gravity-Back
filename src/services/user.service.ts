@@ -29,4 +29,18 @@ export class UserService {
   async update(id: string, updateUserDto: UpdateUserDto) {
     return User.update(id, updateUserDto);
   }
+
+  async addDeviceToken(userId: number, deviceToken: string) {
+    let user = await User.findOne(userId);
+
+    if(!user.deviceToken) {
+      user.deviceToken = [deviceToken]
+    } else {
+      user.deviceToken.push(deviceToken);
+    }
+
+    user.save();
+
+    return user;
+  }
 }

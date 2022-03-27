@@ -1,12 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+import { Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
 import { Roles } from 'src/decorators/roles.decorator';
 import { CreateEventDto } from 'src/dto/event/create-event.dto';
 import { UpdateEventDto } from 'src/dto/event/update-event.dto';
 import { RoleEnum } from 'src/entities/enums/role.enum';
 import { Event } from 'src/entities/event.entity';
-import { Role } from 'src/entities/role.entity';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { EventService } from 'src/services/event.service';
@@ -47,8 +44,13 @@ export class EventController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleEnum.VerifiedUser)
   @Get(':id')
-  read(@Param('id') id: string) {
-    return this.eventService.read(id);
+  async read(@Param('id') id: string, @Request() req) {
+    const event = await this.eventService.read(id);
+    let isUserRegistered = false;
+    if(event.registered_user.some(user => user.id === req.user.userId)) {
+      isUserRegistered = true;
+    }
+    return {...event, isUserRegistered: isUserRegistered};
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

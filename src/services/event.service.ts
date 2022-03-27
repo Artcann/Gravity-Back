@@ -65,6 +65,11 @@ export class EventService {
       .getMany();
   }
 
+  async isUserRegisteredToEvent(userId: string, eventId: string) {
+    const user = await User.findOne(userId);
+    return user;
+  }
+
   async inscription(eventId: string, userId: string) {
     const event = await Event.findOne(eventId);
     const user = await User.findOne(userId);
