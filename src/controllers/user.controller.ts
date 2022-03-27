@@ -1,6 +1,7 @@
-import { Body, ClassSerializerInterceptor, Controller, Get, Param, Put, Request, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Get, Param, Post, Put, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { get } from 'http';
 import { Roles } from 'src/decorators/roles.decorator';
+import { AddDeviceTokenDto } from 'src/dto/user/add-device-token.dto';
 import { UpdateUserDto } from 'src/dto/user/update-user.dto';
 import { RoleEnum } from 'src/entities/enums/role.enum';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
@@ -32,6 +33,13 @@ export class UserController {
   @Put() 
   updateUser(@Request() req, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(req.user.userId, updateUserDto);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.VerifiedUser)
+  @Post('deviceToken')
+  addDeviceToken(@Request() req, @Body() addDeviceTokenDto: AddDeviceTokenDto) {
+    return this.userService.addDeviceToken(req.user.userId, addDeviceTokenDto.deviceToken);
   }
 
 }

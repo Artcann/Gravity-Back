@@ -74,6 +74,9 @@ export class User extends BaseEntity {
   @OneToMany(() => ChallengeStatus, challengeStatus => challengeStatus.user)
   challenge_status: ChallengeStatus[];
 
+  @Column("text", { array: true, nullable: true})
+  deviceToken: string[]
+
   @BeforeInsert()
   async hashPassword() {
     if(this.password) {
