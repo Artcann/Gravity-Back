@@ -20,7 +20,7 @@ export class CreateSponsorDto {
     longitude: number;
 
     @IsOptional()
-    @IsDataURI()
+    @IsString()
     picture?: string;
 
     @ValidateNested()

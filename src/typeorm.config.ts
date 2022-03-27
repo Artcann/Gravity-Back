@@ -7,7 +7,7 @@ import { EventTranslation } from './entities/event-translation.entity';
 import { SponsorTranslation } from './entities/sponsor-translation.entity';
 import { QuaranteMilleEuros } from './entities/sponsor.entity';
 import { Member } from './entities/member.entity';
-import { MemberTranslation } from './entities/member-translation.enum';
+import { MemberTranslation } from './entities/member-translation.entity';
 import { Presentation } from './entities/presentation.entity';
 import { Role } from "./entities/role.entity";
 import { SocialNetwork } from "./entities/social-network.entity";

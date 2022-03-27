@@ -1,4 +1,4 @@
-import { ClassSerializerInterceptor, Controller, Get, Param, Put, Request, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Get, Param, Put, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { get } from 'http';
 import { Roles } from 'src/decorators/roles.decorator';
 import { UpdateUserDto } from 'src/dto/user/update-user.dto';
@@ -30,7 +30,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleEnum.VerifiedUser)
   @Put() 
-  updateUser(@Request() req, updateUserDto: UpdateUserDto) {
+  updateUser(@Request() req, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(req.user.userId, updateUserDto);
   }
 

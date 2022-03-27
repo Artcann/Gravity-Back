@@ -25,7 +25,7 @@ export class EventTranslation extends BaseEntity {
     @Column()
     title: string;
 
-    @ManyToOne(() => Event, event => event.translation)
+    @ManyToOne(() => Event, event => event.translation, {onDelete: "CASCADE"})
     event: Event
 
 }

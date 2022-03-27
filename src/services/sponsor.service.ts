@@ -42,12 +42,20 @@ export class SponsorService {
     }
 
     update(id: string, updateSponsorDto: UpdateSponsorDto) {
-        const location: Point = {
-            type: "Point",
-            coordinates: [updateSponsorDto.longitude, updateSponsorDto.latitude]
-        }
 
-        return QuaranteMilleEuros.update(id, {...updateSponsorDto, location: location});
+        if(updateSponsorDto.latitude && updateSponsorDto.longitude) {
+            const location: Point = {
+                type: "Point",
+                coordinates: [updateSponsorDto.longitude, updateSponsorDto.latitude]
+            }
+
+            return QuaranteMilleEuros.update(id, {...updateSponsorDto, location: location});
+        } else {
+            return QuaranteMilleEuros.update(id, updateSponsorDto);
+        }
+        
+
+        
     }
 
     delete(id: string) {

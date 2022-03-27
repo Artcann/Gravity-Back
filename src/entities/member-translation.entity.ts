@@ -16,7 +16,7 @@ export class MemberTranslation extends BaseEntity {
     @Column()
     description: string;
 
-    @ManyToOne(() => Member, member => member.translation)
+    @ManyToOne(() => Member, member => member.translation, {onDelete: "CASCADE"})
     member: Member;
 
 }
