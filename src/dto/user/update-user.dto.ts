@@ -18,6 +18,10 @@ export class UpdateUserDto {
     phone_number?: string;
 
     @IsOptional()
+    @IsEnum(LanguageEnum)
+    language?: string;
+
+    @IsOptional()
     @IsEnum(GroupEnum)
     group?: GroupEnum;
 

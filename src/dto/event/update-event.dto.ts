@@ -1,4 +1,6 @@
-import { IsDateString, IsLatitude, IsLongitude, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsDateString, IsLatitude, IsLongitude, IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
+import { EventTranslationDto } from "./event-translation.dto";
 
 export class UpdateEventDto {
 
@@ -29,4 +31,9 @@ export class UpdateEventDto {
   @IsOptional()
   @IsDateString()
   date: Date;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => EventTranslationDto)
+  translation: EventTranslationDto[];
 }

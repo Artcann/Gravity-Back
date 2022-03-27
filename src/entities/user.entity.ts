@@ -6,6 +6,9 @@ import { SocialNetwork } from "./social-network.entity";
 import { Notification } from "./notification.entity";
 import { Exclude } from "class-transformer";
 import { Group } from "./group.entity";
+import { ChallengeSubmission } from "./challenge-submission.entity";
+import { ChallengeStatus } from "./challenge-status.entity";
+import { Challenge } from "./challenge.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -64,6 +67,12 @@ export class User extends BaseEntity {
   @ManyToMany(() => Group)
   @JoinTable()
   groups: Group[];
+
+  @OneToMany(() => ChallengeSubmission, challengeSubmission => challengeSubmission.user, {cascade: true, eager: true})
+  challenge_submission: ChallengeSubmission[];
+
+  @OneToMany(() => ChallengeStatus, challengeStatus => challengeStatus.user)
+  challenge_status: ChallengeStatus[];
 
   @BeforeInsert()
   async hashPassword() {

@@ -14,6 +14,7 @@ import { StaticController } from './controllers/static.controller';
 import { MemberController } from './controllers/member.controller';
 import { PresentationController } from './controllers/presentation.controller';
 import { SponsorController } from './controllers/sponsor.controller';
+import { ChallengeController } from './controllers/challenge.controller';
 
 import { UserService } from './services/user.service';
 import { AuthService } from './services/auth.service';
@@ -22,8 +23,11 @@ import { StaticService } from './services/static.service';
 import { MemberService } from './services/member.service';
 import { PresentationService } from './services/presentation.service';
 import { SponsorService } from './services/sponsor.service';
+import { ChallengeService } from './services/challenge.service';
 
 import * as typeOrmConfig from './typeorm.config';
+
+
 
 @Module({
   imports: [
@@ -35,8 +39,9 @@ import * as typeOrmConfig from './typeorm.config';
   }),
   TypeOrmModule.forRoot(typeOrmConfig)],
   controllers: [AuthController, UserController, EventController, MemberController, 
-    StaticController, PresentationController, SponsorController],
+    StaticController, PresentationController, SponsorController, ChallengeController],
+
   providers: [AuthService, UserService, EventService, StaticService, MemberService,
-    JwtStrategy, LocalStrategy, PresentationService, SponsorService],
+    JwtStrategy, LocalStrategy, PresentationService, SponsorService, ChallengeService],
 })
 export class AppModule {}

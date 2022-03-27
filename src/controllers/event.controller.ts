@@ -47,8 +47,13 @@ export class EventController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleEnum.VerifiedUser)
   @Get(':id')
-  read(@Param('id') id: string) {
-    return this.eventService.read(id);
+  async read(@Param('id') id: string, @Request() req) {
+    const event = await this.eventService.read(id);
+    let isUserRegistered = false;
+    if(event.registered_user.some(user => user.id === req.user.userId)) {
+      isUserRegistered = true;
+    }
+    return {...event, isUserRegistered: isUserRegistered};
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
