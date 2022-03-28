@@ -1,4 +1,4 @@
-import { IsEnum, IsString } from "class-validator";
+import { IsBoolean, IsEnum, IsString } from "class-validator";
 import { LanguageEnum } from "src/entities/enums/language.enum";
 import { PresentationEnum } from "src/entities/enums/presentation.enum";
 
@@ -12,4 +12,7 @@ export class CreatePresentationDto {
 
     @IsString()
     content: string;
+
+    @IsBoolean()
+    status: boolean;
 }

@@ -21,9 +21,6 @@ export class Challenge extends BaseEntity {
     @Column()
     submissionType: ChallengeSubmissionTypeEnum;
 
-    @Column()
-    acceptToShareImage: boolean;
-
     @OneToMany(() => ChallengeSubmission, challengeSubmission => challengeSubmission.challenge)
     challenge_submission: ChallengeSubmission[];
 

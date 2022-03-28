@@ -18,4 +18,7 @@ export class ChallengeSubmission extends BaseEntity {
 
     @Column()
     isFile: boolean;
+
+    @Column({nullable: true})
+    acceptToShareImage: boolean;
 }
