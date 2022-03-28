@@ -2,6 +2,7 @@ import { Body, ClassSerializerInterceptor, Controller, Get, Param, Post, Put, Re
 import { get } from 'http';
 import { Roles } from 'src/decorators/roles.decorator';
 import { AddDeviceTokenDto } from 'src/dto/user/add-device-token.dto';
+import { AddSocialsDto } from 'src/dto/user/add-socials.dto';
 import { UpdateUserDto } from 'src/dto/user/update-user.dto';
 import { RoleEnum } from 'src/entities/enums/role.enum';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
@@ -40,6 +41,13 @@ export class UserController {
   @Post('deviceToken')
   addDeviceToken(@Request() req, @Body() addDeviceTokenDto: AddDeviceTokenDto) {
     return this.userService.addDeviceToken(req.user.userId, addDeviceTokenDto.deviceToken);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.VerifiedUser)
+  @Post('socials')
+  addSocials(@Request() req, @Body() addDeviceTokenDto: AddSocialsDto) {
+    return this.userService.addSocials(req.user.userId, addDeviceTokenDto);
   }
 
 }

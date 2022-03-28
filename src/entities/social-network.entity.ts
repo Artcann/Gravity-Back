@@ -16,7 +16,7 @@ export class SocialNetwork extends BaseEntity {
     @Column({default: false})
     public: boolean;
 
-    @ManyToOne(() => User, user => user.socials)
+    @ManyToOne(() => User, user => user.socials, {onUpdate: "CASCADE"})
     @JoinTable()
     user: User;
 }

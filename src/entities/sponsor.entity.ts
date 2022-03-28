@@ -25,6 +25,6 @@ export class QuaranteMilleEuros extends BaseEntity {
     @Column("geometry")
     location: Geometry;
 
-    @OneToMany(() => SponsorTranslation, sponsorTranslation => sponsorTranslation.sponsor)
+    @OneToMany(() => SponsorTranslation, sponsorTranslation => sponsorTranslation.sponsor, {cascade: true, eager: true})
     translation: SponsorTranslation[];
 }
