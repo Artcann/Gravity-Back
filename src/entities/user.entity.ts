@@ -73,7 +73,7 @@ export class User extends BaseEntity {
   challengesNotification: boolean;
 
   @Exclude()
-  @Column({default: false})
+  @Column({default: true})
   firstConnection: boolean;
 
   @OneToOne(() => Member, {nullable: true})

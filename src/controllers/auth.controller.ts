@@ -71,9 +71,9 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     async login(@Request() req) {
       const reponse = this.authService.login(req.user);
-      
+
       const userEntity = await User.findOne(req.user.id);
-      userEntity.firstConnection = true;
+      userEntity.firstConnection = false;
   
       userEntity.save();
 
