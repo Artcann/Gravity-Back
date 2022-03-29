@@ -17,6 +17,7 @@ import { Challenge } from "./entities/challenge.entity";
 import { ChallengeTranslation } from "./entities/challenge-translation.entity";
 import { ChallengeSubmission } from "./entities/challenge-submission.entity";
 import { ChallengeStatus } from "./entities/challenge-status.entity";
+import { Division } from "./entities/division.entity";
 
 const typeOrmConfig : TypeOrmModuleOptions = {
     type: 'postgres',
@@ -27,7 +28,8 @@ const typeOrmConfig : TypeOrmModuleOptions = {
     database: process.env.POSTGRES_DB || 'friendly_meme',
     entities: [User, Token, Event, EventTranslation, Member, MemberTranslation,
     QuaranteMilleEuros, SponsorTranslation, Presentation, Role, SocialNetwork, 
-    Notification, Group, Challenge, ChallengeSubmission, ChallengeTranslation, ChallengeStatus],
+    Notification, Group, Challenge, ChallengeSubmission, ChallengeTranslation, 
+    ChallengeStatus, Division],
     synchronize: true,
     autoLoadEntities: true
 }

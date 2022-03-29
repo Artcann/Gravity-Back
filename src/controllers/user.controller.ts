@@ -19,7 +19,7 @@ export class UserController {
   @Roles(RoleEnum.VerifiedUser)
   @Get('profile/public/:id')
   publicProfile(@Param('id') id: string) {
-    return this.userService.findOne(id);
+    return this.userService.findOneById(id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -40,7 +40,7 @@ export class UserController {
   @Roles(RoleEnum.VerifiedUser)
   @Post('deviceToken')
   addDeviceToken(@Request() req, @Body() addDeviceTokenDto: AddDeviceTokenDto) {
-    return this.userService.addDeviceToken(req.user.userId, addDeviceTokenDto.deviceToken);
+    return this.userService.updateDeviceToken(req.user.userId, addDeviceTokenDto.deviceToken);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
