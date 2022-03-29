@@ -4,7 +4,7 @@ import { RoleEnum } from "src/entities/enums/role.enum";
 import { JwtAuthGuard } from "src/guards/jwt-auth.guard";
 import { NotificationService } from "src/services/notification.service";
 
-Controller('notification')
+@Controller('notification')
 export class NotificationController {
     constructor(private notificationService: NotificationService) {}
 
