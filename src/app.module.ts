@@ -28,6 +28,8 @@ import { ChallengeService } from './services/challenge.service';
 import * as typeOrmConfig from './typeorm.config';
 import { DivisionController } from './controllers/division.controller';
 import { DivisionService } from './services/division.service';
+import { NotificationController } from './controllers/notification.controller';
+import { NotificationService } from './services/notification.service';
 
 
 
@@ -42,10 +44,10 @@ import { DivisionService } from './services/division.service';
   TypeOrmModule.forRoot(typeOrmConfig)],
   controllers: [AuthController, UserController, EventController, MemberController, 
     StaticController, PresentationController, SponsorController, ChallengeController,
-    DivisionController],
+    DivisionController, NotificationController],
 
   providers: [AuthService, UserService, EventService, StaticService, MemberService,
     JwtStrategy, LocalStrategy, PresentationService, SponsorService, ChallengeService,
-    DivisionService],
+    DivisionService, NotificationService],
 })
 export class AppModule {}
