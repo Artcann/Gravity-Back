@@ -16,7 +16,7 @@ export class SponsorTranslation extends BaseEntity {
     @Column()
     description: string;
 
-    @Column()
+    @Column({nullable: true})
     context_text: string;
 
     @ManyToOne(() => QuaranteMilleEuros, quaranteMilleEuro => quaranteMilleEuro.translation, {onDelete: "CASCADE"})
