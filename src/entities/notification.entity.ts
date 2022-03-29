@@ -14,7 +14,7 @@ export class Notification extends BaseEntity {
     @Column({default: true})
     isNew: boolean;
 
-    @Column()
+    @Column({nullable: true})
     title: string;
 
     @Column()
