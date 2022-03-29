@@ -16,10 +16,19 @@ export class ChallengeService {
             challengesYouParticipatedIn.push(challenge.challenge.id);
         })
 
-        const challenges = Challenge.createQueryBuilder('challenge')
-            .where("challenge.id != ANY (:challenges) AND challenge.type = :challengeType", 
-            {challenges: challengesYouParticipatedIn, challengeType: type})
-            .getMany();
+        let challenges: any;
+
+        if (challengesYouParticipatedIn.length !== 0) {
+            challenges = Challenge.createQueryBuilder('challenge')
+                .where("challenge.id != ANY (:challenges) AND challenge.type = :challengeType", 
+                {challenges: challengesYouParticipatedIn, challengeType: type})
+                .getMany();
+        } else {
+            challenges = Challenge.createQueryBuilder('challenge')
+                .where("challenge.type = :challengeType", { challengeType: type })
+                .getMany();
+        }
+        
 
         return challenges;
     }
