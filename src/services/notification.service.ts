@@ -8,7 +8,7 @@ export class NotificationService {
     getNotificationByUser(id: string, lang: LanguageEnum) {
         return Notification.createQueryBuilder('notification')
             .innerJoinAndSelect('notification.user', 'user')
-            .where("user.id = :id AND lang = :lang", {id, lang})
+            .where("user.id = :id AND user.language = :lang", {id, lang})
             .getMany();
     }
 

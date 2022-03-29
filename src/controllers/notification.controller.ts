@@ -19,6 +19,6 @@ export class NotificationController {
     @Roles(RoleEnum.VerifiedUser)
     @Post(':id')
     changeIsNew(@Param('id') id: string) {
-        this.notificationService.changeIsNew(id);
+        return this.notificationService.changeIsNew(id);
     }
 }
