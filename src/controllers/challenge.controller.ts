@@ -25,7 +25,7 @@ export class ChallengeController {
     @Roles(RoleEnum.VerifiedUser)
     @Get('new/specials')
     getNewSpecialChallenges(@Request() req) {
-        return this.challengeService.getNewChallengesByType(req.user.userId, ChallengeTypeEnum.NORMAL);
+        return this.challengeService.getNewChallengesByType(req.user.userId, ChallengeTypeEnum.SPECIAL);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)

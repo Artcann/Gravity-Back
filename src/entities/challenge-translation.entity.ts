@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Challenge } from 'src/entities/challenge.entity';
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { LanguageEnum } from "./enums/language.enum";
 
 @Entity()
@@ -20,4 +21,8 @@ export class ChallengeTranslation extends BaseEntity {
 
     @Column()
     rejectReason: string;
+
+    @ManyToOne(() => Challenge, challenge => challenge.translation)
+    challenge: Challenge;
+
 }
