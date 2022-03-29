@@ -17,7 +17,7 @@ export class Notification extends BaseEntity {
     @Column({nullable: true})
     title: string;
 
-    @Column()
+    @Column({nullable: true})
     action: NotificationActionEnum;
 
     @Column()
