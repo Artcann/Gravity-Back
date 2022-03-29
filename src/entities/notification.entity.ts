@@ -20,7 +20,7 @@ export class Notification extends BaseEntity {
     @Column({nullable: true})
     action: NotificationActionEnum;
 
-    @Column()
+    @Column({nullable: true})
     url: string;
 
     @ManyToOne(() => User, user => user.notifications)
