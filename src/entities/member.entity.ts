@@ -1,5 +1,7 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Division } from "./division.entity";
 import { MemberTranslation } from "./member-translation.entity";
+import { User } from "./user.entity";
 
 @Entity()
 export class Member extends BaseEntity {
@@ -15,10 +17,20 @@ export class Member extends BaseEntity {
     @Column()
     nickname: string;
 
+    @Column()
+    role: string;
+
     @Column({nullable: true})
     image: string;
 
     @OneToMany(() => MemberTranslation, memberTranslation => memberTranslation.member, {cascade: true, eager: true})
     translation: MemberTranslation[];
+
+    @OneToOne(() => User)
+    @JoinColumn()
+    user: User;
+
+    @ManyToMany(() => Division)
+    division: Division[];
 
 }

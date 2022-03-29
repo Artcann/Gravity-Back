@@ -25,6 +25,10 @@ export class UserService {
     return user;
   }
 
+  async findOneById(id: string) {
+    return User.findOne(id);
+  }
+
   async findOne(email: string): Promise<User | undefined> {
     return User.findOne({email: email.toLocaleLowerCase()});
   }
@@ -35,14 +39,10 @@ export class UserService {
     return user.save();
   }
 
-  async addDeviceToken(userId: number, deviceToken: string) {
+  async updateDeviceToken(userId: number, deviceToken: string) {
     let user = await User.findOne(userId);
 
-    if(!user.deviceToken) {
-      user.deviceToken = [deviceToken]
-    } else {
-      user.deviceToken.push(deviceToken);
-    }
+    user.deviceToken = deviceToken;
 
     user.save();
 

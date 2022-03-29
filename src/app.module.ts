@@ -26,6 +26,8 @@ import { SponsorService } from './services/sponsor.service';
 import { ChallengeService } from './services/challenge.service';
 
 import * as typeOrmConfig from './typeorm.config';
+import { DivisionController } from './controllers/division.controller';
+import { DivisionService } from './services/division.service';
 
 
 
@@ -39,9 +41,11 @@ import * as typeOrmConfig from './typeorm.config';
   }),
   TypeOrmModule.forRoot(typeOrmConfig)],
   controllers: [AuthController, UserController, EventController, MemberController, 
-    StaticController, PresentationController, SponsorController, ChallengeController],
+    StaticController, PresentationController, SponsorController, ChallengeController,
+    DivisionController],
 
   providers: [AuthService, UserService, EventService, StaticService, MemberService,
-    JwtStrategy, LocalStrategy, PresentationService, SponsorService, ChallengeService],
+    JwtStrategy, LocalStrategy, PresentationService, SponsorService, ChallengeService,
+    DivisionService],
 })
 export class AppModule {}

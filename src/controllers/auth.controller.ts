@@ -70,7 +70,14 @@ export class AuthController {
     @Post('login')
     @UseGuards(LocalAuthGuard)
     async login(@Request() req) {
-      return this.authService.login(req.user);
+      const reponse = this.authService.login(req.user);
+
+      const userEntity = await User.findOne(req.user.id);
+      userEntity.firstConnection = false;
+  
+      userEntity.save();
+
+      return reponse;
     }
   
 }

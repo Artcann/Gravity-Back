@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { NotificationActionEnum } from "./enums/notification-action.enum";
 import { Group } from "./group.entity";
 import { User } from "./user.entity";
 
@@ -12,6 +13,15 @@ export class Notification extends BaseEntity {
 
     @Column({default: true})
     isNew: boolean;
+
+    @Column()
+    title: string;
+
+    @Column()
+    action: NotificationActionEnum;
+
+    @Column()
+    url: string;
 
     @ManyToOne(() => User, user => user.notifications)
     user: User;

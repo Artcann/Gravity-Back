@@ -1,4 +1,4 @@
-import { BaseEntity, BeforeInsert, Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable, ManyToOne } from "typeorm";
+import { BaseEntity, BeforeInsert, Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable, ManyToOne, OneToOne } from "typeorm";
 import * as bcrypt from "bcryptjs";
 import { LanguageEnum } from "./enums/language.enum";
 import { Role } from "./role.entity";
@@ -9,6 +9,7 @@ import { Group } from "./group.entity";
 import { ChallengeSubmission } from "./challenge-submission.entity";
 import { ChallengeStatus } from "./challenge-status.entity";
 import { Challenge } from "./challenge.entity";
+import { Member } from "./member.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -50,6 +51,33 @@ export class User extends BaseEntity {
 
   @Column({ nullable: true })
   address: string;
+  
+  @Exclude()
+  @Column({nullable: true})
+  deviceToken: string;
+
+  @Exclude()
+  @Column({default: true})
+  activityNotification: boolean;
+
+  @Exclude()
+  @Column({default: true})
+  foodNotification: boolean;
+  
+  @Exclude()
+  @Column({default: true})
+  sponsorNotification: boolean;
+  
+  @Exclude()
+  @Column({default: true})
+  challengesNotification: boolean;
+
+  @Exclude()
+  @Column({default: true})
+  firstConnection: boolean;
+
+  @OneToOne(() => Member, {nullable: true})
+  member: Member;
 
   @Exclude()
   @ManyToMany(() => Role, {cascade: true, eager: true})
@@ -68,14 +96,13 @@ export class User extends BaseEntity {
   @JoinTable()
   groups: Group[];
 
+  @Exclude()
   @OneToMany(() => ChallengeSubmission, challengeSubmission => challengeSubmission.user, {cascade: true, eager: true})
   challenge_submission: ChallengeSubmission[];
 
+  @Exclude()
   @OneToMany(() => ChallengeStatus, challengeStatus => challengeStatus.user)
   challenge_status: ChallengeStatus[];
-
-  @Column("text", { array: true, nullable: true})
-  deviceToken: string[]
 
   @BeforeInsert()
   async hashPassword() {

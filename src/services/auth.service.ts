@@ -20,9 +20,12 @@ export class AuthService {
   }
 
   async login(user: User) {
+    const userEntity = await User.findOne(user.id);
+
     const payload = { email: user.email.toLocaleLowerCase(), sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
+      first_connection: userEntity.firstConnection
     };
   }
 
