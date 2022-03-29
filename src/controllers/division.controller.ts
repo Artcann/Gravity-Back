@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { GetDivisionByLabelDto } from "src/dto/division/get-by-label.dto";
 import { DivisionService } from "src/services/division.service";
 
@@ -6,7 +6,7 @@ import { DivisionService } from "src/services/division.service";
 export class DivisionController {
     constructor(private divisionService: DivisionService) {}
 
-    @Get('/label')
+    @Post('/label')
     getDivisionByLabel(@Body() getDivisionByLabelDto: GetDivisionByLabelDto) {
         return this.divisionService.getDivisonByLabel(getDivisionByLabelDto.label);
     }

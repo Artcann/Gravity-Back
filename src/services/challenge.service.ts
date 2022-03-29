@@ -20,11 +20,13 @@ export class ChallengeService {
 
         if (challengesYouParticipatedIn.length !== 0) {
             challenges = Challenge.createQueryBuilder('challenge')
+                .leftJoinAndSelect("challenge.translation", "translation")
                 .where("challenge.id != ANY (:challenges) AND challenge.type = :challengeType", 
                 {challenges: challengesYouParticipatedIn, challengeType: type})
                 .getMany();
         } else {
             challenges = Challenge.createQueryBuilder('challenge')
+                .leftJoinAndSelect("challenge.translation", "translation")
                 .where("challenge.type = :challengeType", { challengeType: type })
                 .getMany();
         }
@@ -37,6 +39,7 @@ export class ChallengeService {
         const challengeIdList = await ChallengeStatus.createQueryBuilder("challengeStatus")
         .innerJoinAndSelect('challengeStatus.user', 'user')
         .innerJoinAndSelect('challengeStatus.challenge', 'challenge')
+        .leftJoinAndSelect("challenge.translation", "translation")
         .where("challengeStatus.user = :id AND challengeStatus.status = :status", {id: userId, status: status})
         .getMany()
 
@@ -55,6 +58,7 @@ export class ChallengeService {
     async getChallengeById(challengeId: string) {
         const challenge = await Challenge.createQueryBuilder("challenge")
             .leftJoinAndSelect('challenge.challenge_submission', 'challenge_submission')
+            .leftJoinAndSelect("challenge.translation", "translation")
             .where('challenge.id = :id', {id: challengeId})
             .getMany();
 

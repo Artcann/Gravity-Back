@@ -1,5 +1,5 @@
 import { ChallengeTranslation } from './challenge-translation.entity';
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { ChallengeTypeEnum } from "./enums/challenge-type.enum";
 import { ChallengeSubmissionTypeEnum } from "./enums/challenge-submission-type.enum";
 import { ChallengeSubmission } from "./challenge-submission.entity";
@@ -28,6 +28,6 @@ export class Challenge extends BaseEntity {
     @OneToMany(() => ChallengeStatus, challengeStatus => challengeStatus.challenge)
     challenge_status: ChallengeStatus[];
 
-    @OneToMany(() => ChallengeTranslation, translation => translation.challenge, {cascade: true, eager: true})
+    @OneToMany(() => ChallengeTranslation, translation => translation.challenge, {eager: true})
     translation: ChallengeTranslation[];
 }
