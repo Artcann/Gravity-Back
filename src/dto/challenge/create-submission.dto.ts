@@ -1,15 +1,15 @@
 import { IsBoolean, IsNumber, IsString } from 'class-validator';
 
 export class CreateSubmissionDto {
-  @IsString()
-  challengeId: string;
+    @IsString()
+    challengeId: string;
 
-  @IsString()
-  content: string;
+    @IsString()
+    content: string;
 
-  @IsBoolean()
-  isFile: boolean;
+    @IsBoolean()
+    isFile: boolean;
 
-  @IsBoolean()
-  acceptToShareImage: boolean;
+    @IsBoolean()
+    acceptToShareImage: boolean;
 }

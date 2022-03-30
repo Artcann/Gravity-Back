@@ -99,8 +99,9 @@ export class ChallengeService {
 
     async submitChallengeAnswer(createSubmissionDto: CreateSubmissionDto, userId: string) {
         const user = await User.findOne(+userId);
+        const challenge = await Challenge.findOne(createSubmissionDto.challengeId);
 
-        const payload = {user: user, ...createSubmissionDto};
+        const payload = {user: user, challenge: challenge, ...createSubmissionDto};
 
         const submission = await ChallengeSubmission.create(payload);
 
