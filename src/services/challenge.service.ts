@@ -101,6 +101,14 @@ export class ChallengeService {
         const user = await User.findOne(+userId);
         const challenge = await Challenge.findOne(createSubmissionDto.challengeId);
 
+        const status = ChallengeStatus.create({
+            user: user,
+            challenge: challenge,
+            status: ChallengeStatusEnum.PROCESSING,
+        });
+
+        status.save();
+
         const payload = {user: user, challenge: challenge, ...createSubmissionDto};
 
         const submission = await ChallengeSubmission.create(payload);

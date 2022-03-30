@@ -8,10 +8,10 @@ export class ChallengeStatus extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: string;
 
-    @ManyToOne(() => User, user => user.challenge_status, {onDelete: "CASCADE"})
+    @ManyToOne(() => User, user => user.challenge_status, {onDelete: "CASCADE", cascade: true})
     user: User;
 
-    @ManyToOne(() => Challenge, challenge => challenge.challenge_status, {onDelete: "CASCADE"})
+    @ManyToOne(() => Challenge, challenge => challenge.challenge_status, {onDelete: "CASCADE", cascade: true})
     challenge: Challenge;
 
     @Column()
