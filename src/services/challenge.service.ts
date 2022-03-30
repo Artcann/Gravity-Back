@@ -42,9 +42,9 @@ export class ChallengeService {
         const challengeIdList = await ChallengeStatus.createQueryBuilder("challengeStatus")
         .innerJoinAndSelect('challengeStatus.user', 'user')
         .innerJoinAndSelect('challengeStatus.challenge', 'challenge')
-        .leftJoinAndSelect("challenge.translation", "translation")
-        .where("challengeStatus.user = :id AND challengeStatus.status = :status AND translation.language = :language",
-        {id: userId, status: status, language: lang})
+        .leftJoinAndSelect("challenge.translation", "translation", "translation.language = :language", {language: lang})
+        .where("challengeStatus.user = :id AND challengeStatus.status = :status",
+        {id: userId, status: status})
         .getMany()
 
         let challengeList = [];
@@ -62,8 +62,8 @@ export class ChallengeService {
     async getChallengeById(challengeId: string, lang: LanguageEnum) {
         const challenge = await Challenge.createQueryBuilder("challenge")
             .leftJoinAndSelect('challenge.challenge_submission', 'challenge_submission')
-            .leftJoinAndSelect("challenge.translation", "translation")
-            .where('challenge.id = :id AND translation.language = :language', {id: challengeId, language: lang})
+            .leftJoinAndSelect("challenge.translation", "translation", "translation.language = :language", {language: lang})
+            .where('challenge.id = :id', {id: challengeId})
             .getMany();
 
         return challenge;
