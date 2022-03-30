@@ -17,6 +17,8 @@ export class NotificationService {
 
         notification.isNew = false;
 
+        notification.save();
+
         return notification;
     }
 }

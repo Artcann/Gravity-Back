@@ -20,7 +20,7 @@ export class ChallengeTranslation extends BaseEntity {
     description: string;
 
     @Column()
-    rejectReason: string;
+    rewards: string;
 
     @ManyToOne(() => Challenge, challenge => challenge.translation)
     challenge: Challenge;

@@ -17,6 +17,6 @@ export class ChallengeStatus extends BaseEntity {
     @Column()
     status: ChallengeStatusEnum;
 
-    @Column()
+    @Column({nullable: true})
     context: string;
 }

@@ -1,15 +1,17 @@
 import { Injectable } from "@nestjs/common";
+import { CreateSubmissionDto } from "src/dto/challenge/create-submission.dto";
 import { ChallengeStatus } from "src/entities/challenge-status.entity";
 import { ChallengeSubmission } from "src/entities/challenge-submission.entity";
 import { Challenge } from "src/entities/challenge.entity";
 import { ChallengeStatusEnum } from "src/entities/enums/challenge-status.enum";
 import { ChallengeTypeEnum } from "src/entities/enums/challenge-type.enum";
+import { LanguageEnum } from "src/entities/enums/language.enum";
 import { User } from "src/entities/user.entity";
 
 @Injectable()
 export class ChallengeService {
 
-    async getNewChallengesByType(id: string, type: ChallengeTypeEnum) {
+    async getNewChallengesByType(id: string, type: ChallengeTypeEnum, lang: LanguageEnum) {
         const user = await User.findOne(id);
         let challengesYouParticipatedIn = [];
         user.challenge_submission.forEach(challenge => {
@@ -18,29 +20,31 @@ export class ChallengeService {
 
         let challenges: any;
 
+        console.log(challengesYouParticipatedIn);
+
         if (challengesYouParticipatedIn.length !== 0) {
             challenges = Challenge.createQueryBuilder('challenge')
-                .leftJoinAndSelect("challenge.translation", "translation")
-                .where("challenge.id != ANY (:challenges) AND challenge.type = :challengeType", 
+                .leftJoinAndSelect("challenge.translation", "translation", "translation.language = :language", {language: lang})
+                .where("challenge.id NOT IN (:...challenges) AND challenge.type = :challengeType", 
                 {challenges: challengesYouParticipatedIn, challengeType: type})
                 .getMany();
         } else {
             challenges = Challenge.createQueryBuilder('challenge')
-                .leftJoinAndSelect("challenge.translation", "translation")
-                .where("challenge.type = :challengeType", { challengeType: type })
+                .leftJoinAndSelect("challenge.translation", "translation", "translation.language = :language", {language: lang})
+                .where("challenge.type = :challengeType", { challengeType: type})
                 .getMany();
         }
-        
 
         return challenges;
     }
 
-    async getChallengesByStatus(userId: string, status: ChallengeStatusEnum) {
+    async getChallengesByStatus(userId: string, status: ChallengeStatusEnum, lang: LanguageEnum) {
         const challengeIdList = await ChallengeStatus.createQueryBuilder("challengeStatus")
         .innerJoinAndSelect('challengeStatus.user', 'user')
         .innerJoinAndSelect('challengeStatus.challenge', 'challenge')
         .leftJoinAndSelect("challenge.translation", "translation")
-        .where("challengeStatus.user = :id AND challengeStatus.status = :status", {id: userId, status: status})
+        .where("challengeStatus.user = :id AND challengeStatus.status = :status AND translation.language = :language",
+        {id: userId, status: status, language: lang})
         .getMany()
 
         let challengeList = [];
@@ -55,11 +59,11 @@ export class ChallengeService {
         return challengeList;
     }
 
-    async getChallengeById(challengeId: string) {
+    async getChallengeById(challengeId: string, lang: LanguageEnum) {
         const challenge = await Challenge.createQueryBuilder("challenge")
             .leftJoinAndSelect('challenge.challenge_submission', 'challenge_submission')
             .leftJoinAndSelect("challenge.translation", "translation")
-            .where('challenge.id = :id', {id: challengeId})
+            .where('challenge.id = :id AND translation.language = :language', {id: challengeId, language: lang})
             .getMany();
 
         return challenge;
@@ -89,6 +93,16 @@ export class ChallengeService {
     async changeShareStatus(id: string) {
         const submission = await ChallengeSubmission.findOne(id);
         submission.acceptToShareImage = !submission.acceptToShareImage;
+
+        return submission;
+    }
+
+    async submitChallengeAnswer(createSubmissionDto: CreateSubmissionDto, userId: string) {
+        const user = await User.findOne(+userId);
+
+        const payload = {user: user, ...createSubmissionDto};
+
+        const submission = await ChallengeSubmission.create(payload);
 
         return submission;
     }
