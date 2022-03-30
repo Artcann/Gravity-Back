@@ -79,6 +79,9 @@ export class User extends BaseEntity {
   @OneToOne(() => Member, {nullable: true})
   member: Member;
 
+  @Column({nullable: true})
+  url: string;
+
   @Exclude()
   @ManyToMany(() => Role, {cascade: true, eager: true})
   @JoinTable()

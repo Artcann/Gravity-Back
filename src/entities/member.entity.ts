@@ -26,8 +26,11 @@ export class Member extends BaseEntity {
     @OneToMany(() => MemberTranslation, memberTranslation => memberTranslation.member, {cascade: true, eager: true})
     translation: MemberTranslation[];
 
+    @Column({name: "user_id"})
+    userId: number;
+
     @OneToOne(() => User)
-    @JoinColumn()
+    @JoinColumn({name: "user_id"})
     user: User;
 
     @ManyToMany(() => Division)

@@ -104,6 +104,8 @@ export class ChallengeService {
 
         const submission = await ChallengeSubmission.create(payload);
 
+        submission.save();
+
         return submission;
     }
 
