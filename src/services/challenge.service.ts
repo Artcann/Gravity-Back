@@ -69,7 +69,7 @@ export class ChallengeService {
         return challenge;
     }
 
-    async updateSubmission(userId: string, challengeId: string, filepath: string) {
+    async updateSubmission(userId: string, challengeId: string, filepath: string, status: boolean) {
         const user = await User.findOne(userId);
         const challenge = await Challenge.findOne(challengeId);
 
@@ -78,7 +78,8 @@ export class ChallengeService {
             user: user,
             challenge: challenge,
             content: filepath,
-            isFile: true
+            isFile: true,
+            acceptToShareImage: status
         })
 
         submission.save();
