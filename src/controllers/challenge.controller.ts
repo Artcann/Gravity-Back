@@ -70,8 +70,8 @@ export class ChallengeController {
             }
         })
     }))
-    upload(@UploadedFile() image: Express.Multer.File, @Request() req, @Param('id') id: string) {
-        return this.challengeService.updateSubmission(req.user.userId, id, image.filename);
+    upload(@UploadedFile() image: Express.Multer.File, @Request() req, @Param('id') id: string, @Body() body: any) {
+        return this.challengeService.updateSubmission(req.user.userId, id, image.filename, body.status);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
