@@ -1,5 +1,8 @@
+import { ConsoleLogger } from "@nestjs/common";
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
-import { Socket } from "dgram";
+import { ExtractJwt } from "passport-jwt";
+import { Socket } from "socket.io";
+
 
 @WebSocketGateway({
     cors: {
@@ -13,6 +16,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
     handleConnection(client: any, ...args: any[]) {
         console.log(client.id);
+        let header = client.handshake.headers;
+        console.log(header);
+        console.log(ExtractJwt.fromBodyField(header));
         return client.id;
     }
     afterInit(server: any) {
@@ -22,7 +28,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @SubscribeMessage('chat')
     handleEvent(client: Socket, data: string): string {
         client.emit('chat', "Bonjour");
-        client.emit(data, "Test Hehe");
+        console.log(data);
+        console.log(client.handshake.headers);
         return data;
     }
 
