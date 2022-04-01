@@ -1,5 +1,7 @@
 import { ConsoleLogger } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
+import { time } from "console";
 import { ExtractJwt } from "passport-jwt";
 import { Socket } from "socket.io";
 
@@ -11,14 +13,15 @@ import { Socket } from "socket.io";
 })
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
+    constructor(private jwtService: JwtService) {}
+
     handleDisconnect(client: any) {
         console.log("Disconnection Client");
     }
     handleConnection(client: any, ...args: any[]) {
         console.log(client.id);
         let header = client.handshake.headers;
-        console.log(header);
-        console.log(ExtractJwt.fromBodyField(header));
+        console.log(this.jwtService.decode(header.authorization));
         return client.id;
     }
     afterInit(server: any) {
@@ -27,9 +30,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     @SubscribeMessage('chat')
     handleEvent(client: Socket, data: string): string {
-        client.emit('chat', "Bonjour");
+        setTimeout(() => client.emit('chat', "Bonjour"), 1000);
         console.log(data);
-        console.log(client.handshake.headers);
+        console.log(this.jwtService.decode(client.handshake.headers.authorization));
         return data;
     }
 
