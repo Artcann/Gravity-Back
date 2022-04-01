@@ -1,4 +1,5 @@
-import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, WebSocketGateway } from "@nestjs/websockets";
+import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
+import { Socket } from "dgram";
 
 @WebSocketGateway({
     cors: {
@@ -15,6 +16,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
     afterInit(server: any) {
         throw new Error("Method not implemented.");
+    }
+
+    @SubscribeMessage('events')
+    handleEvent(client: Socket, data: string): string {
+        console.log(client);
+        return data;
     }
 
 }
