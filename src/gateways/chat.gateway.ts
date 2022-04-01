@@ -30,7 +30,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     @SubscribeMessage('chat')
     handleEvent(client: Socket, data: string): string {
-        setTimeout(() => client.emit('chat', "Bonjour"), 1000);
+        client.emit('chat', "Bonjour")
         console.log(data);
         console.log(this.jwtService.decode(client.handshake.headers.authorization));
         return data;
