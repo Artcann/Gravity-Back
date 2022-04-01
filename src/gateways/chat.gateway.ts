@@ -21,7 +21,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     @SubscribeMessage('chat')
     handleEvent(client: Socket, data: string): string {
-        console.log(data);
+        client.emit('chat', "Bonjour");
+        client.emit(data, "Test Hehe");
         return data;
     }
 
