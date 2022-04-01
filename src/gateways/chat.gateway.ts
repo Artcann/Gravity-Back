@@ -9,18 +9,19 @@ import { Socket } from "dgram";
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
     handleDisconnect(client: any) {
-        console.log("Disconnection Client: ", client);
+        console.log("Disconnection Client");
     }
     handleConnection(client: any, ...args: any[]) {
-        console.log(client);
+        console.log(client.id);
+        return client.id;
     }
     afterInit(server: any) {
         console.log("Server up");
     }
 
-    @SubscribeMessage('events')
+    @SubscribeMessage('chat')
     handleEvent(client: Socket, data: string): string {
-        console.log(client);
+        console.log(data);
         return data;
     }
 
