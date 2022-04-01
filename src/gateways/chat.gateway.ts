@@ -9,13 +9,13 @@ import { Socket } from "dgram";
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
     handleDisconnect(client: any) {
-        throw new Error("Method not implemented.");
+        console.log("Disconnection Client: ", client);
     }
     handleConnection(client: any, ...args: any[]) {
         console.log(client);
     }
     afterInit(server: any) {
-        throw new Error("Method not implemented.");
+        console.log("Server up");
     }
 
     @SubscribeMessage('events')
