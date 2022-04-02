@@ -9,6 +9,7 @@ export class ChatService {
         const chat = Chat.createQueryBuilder('chat')
             .innerJoin('chat.user', 'user')
             .where('user.id = :id', {id: id})
+            .orderBy('chat.id', "ASC")
             .getMany();
 
         return chat;
