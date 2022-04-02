@@ -67,7 +67,7 @@ export class ChatGateway
       content: data,
       user: user,
       isAdmin: false,
-      date: Date.now()
+      date: new Date(),
     };
 
     const chatEntity = Chat.create(chat);
@@ -92,7 +92,7 @@ export class ChatGateway
       content: data,
       user: user,
       isAdmin: true,
-      date: Date.now()
+      date: new Date(),
     };
 
     const chatEntity = Chat.create(chat);
