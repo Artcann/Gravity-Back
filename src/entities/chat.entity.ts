@@ -14,4 +14,7 @@ export class Chat extends BaseEntity {
 
     @ManyToOne(() => User, user => user.chat)
     user: User;
+
+    @Column({nullable: true})
+    date: Date;
 }
