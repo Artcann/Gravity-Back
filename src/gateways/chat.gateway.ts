@@ -41,15 +41,15 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     @SubscribeMessage('chat')
     async handleEvent(client: Socket, data: string) {
-        client.emit('chat', "Bonjour")
-        
+        client.emit('chat', "Un message à été reçu")
+        client.to(client.id).emit('chat', "Ceci est un message privé " + data)
         console.log(data);
         console.log(this.jwtService.decode(client.handshake.headers.authorization));
 
         const decodedJwt = this.jwtService.decode(client.handshake.headers.authorization);
         const userMail = decodedJwt['email'];
         const user = await this.userService.findOne(userMail);
-
+        
         const chat = {
             content: data,
             user: user,
@@ -58,11 +58,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
         const chatEntity = Chat.create(chat);
         chatEntity.save();
-        console.log("sending", data, "to room chat to user with socketId :", user.socketId)
-        console.log("actual socket id : ", client.id)
+        //console.log("sending", data, "to room chat to user with socketId :", user.socketId)
+        //console.log("actual socket id : ", client.id)
 
-        client.to(user.socketId).emit('chat', data);
-        client.to(client.id).emit('chat', data);
+        //client.to(user.socketId).emit('chat', data);
+        //client.to(client.id).emit('chat', data);
         return data;
     }
 
