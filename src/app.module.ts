@@ -31,6 +31,7 @@ import { DivisionService } from './services/division.service';
 import { NotificationController } from './controllers/notification.controller';
 import { NotificationService } from './services/notification.service';
 import { ChatGateway } from './gateways/chat.gateway';
+import { ChatService } from './services/chat.service';
 
 
 
@@ -49,6 +50,6 @@ import { ChatGateway } from './gateways/chat.gateway';
 
   providers: [AuthService, UserService, EventService, StaticService, MemberService,
     JwtStrategy, LocalStrategy, PresentationService, SponsorService, ChallengeService,
-    DivisionService, NotificationService, ChatGateway],
+    DivisionService, NotificationService, ChatGateway, ChatService],
 })
 export class AppModule {}

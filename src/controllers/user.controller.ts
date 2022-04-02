@@ -7,12 +7,20 @@ import { UpdateUserDto } from 'src/dto/user/update-user.dto';
 import { RoleEnum } from 'src/entities/enums/role.enum';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/guards/roles.guard';
+import { ChatService } from 'src/services/chat.service';
 import { UserService } from 'src/services/user.service';
 
 @Controller('user')
 export class UserController {
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private chatService: ChatService) {}
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.VerifiedUser)
+  @Get('chats')
+  getChat(@Request() req) {
+    return this.chatService.getChats(req.user.userId);
+  }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(JwtAuthGuard, RolesGuard)
