@@ -29,9 +29,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         user.socketId = socketId;
         user.save();
 
-        client.join(socketId);
+        //client.join(socketId);
 
-        client.emit('session', socketId);
+        //client.emit('session', socketId);
 
         return client.id;
     }
@@ -59,8 +59,10 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         const chatEntity = Chat.create(chat);
         chatEntity.save();
         console.log("sending", data, "to room chat to user with socketId :", user.socketId)
-        client.to(user.socketId).emit('chat', data);
+        console.log("actual socket id : ", client.id)
 
+        client.to(user.socketId).emit('chat', data);
+        client.to(client.id).emit('chat', data);
         return data;
     }
 
