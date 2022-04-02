@@ -18,6 +18,7 @@ import { ChallengeTranslation } from "./entities/challenge-translation.entity";
 import { ChallengeSubmission } from "./entities/challenge-submission.entity";
 import { ChallengeStatus } from "./entities/challenge-status.entity";
 import { Division } from "./entities/division.entity";
+import { Chat } from "./entities/chat.entity";
 
 const typeOrmConfig : TypeOrmModuleOptions = {
     type: 'postgres',
@@ -29,7 +30,7 @@ const typeOrmConfig : TypeOrmModuleOptions = {
     entities: [User, Token, Event, EventTranslation, Member, MemberTranslation,
     QuaranteMilleEuros, SponsorTranslation, Presentation, Role, SocialNetwork, 
     Notification, Group, Challenge, ChallengeSubmission, ChallengeTranslation, 
-    ChallengeStatus, Division],
+    ChallengeStatus, Division, Chat],
     synchronize: true,
     autoLoadEntities: true
 }

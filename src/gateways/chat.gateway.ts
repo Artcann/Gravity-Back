@@ -4,6 +4,8 @@ import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessa
 import { time } from "console";
 import { ExtractJwt } from "passport-jwt";
 import { Socket } from "socket.io";
+import { Chat } from "src/entities/chat.entity";
+import { UserService } from "src/services/user.service";
 
 
 @WebSocketGateway({
@@ -13,15 +15,22 @@ import { Socket } from "socket.io";
 })
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
-    constructor(private jwtService: JwtService) {}
+    constructor(private jwtService: JwtService, private userService: UserService) {}
 
-    handleDisconnect(client: any) {
-        console.log("Disconnection Client");
+    handleDisconnect(client: Socket) {
+        client.leave(client.id);
     }
-    handleConnection(client: any, ...args: any[]) {
-        console.log(client.id);
-        let header = client.handshake.headers;
-        console.log(this.jwtService.decode(header.authorization));
+    async handleConnection(client: Socket, ...args: any[]) {
+        const socketId = client.id;
+        const decodedJwt = this.jwtService.decode(client.handshake.headers.authorization);
+        const userMail = decodedJwt['email'];
+        const user = await this.userService.findOne(userMail);
+
+        user.socketId = socketId;
+        user.save();
+
+        client.join(socketId);
+
         return client.id;
     }
     afterInit(server: any) {
@@ -29,11 +38,35 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
 
     @SubscribeMessage('chat')
-    handleEvent(client: Socket, data: string): string {
+    async handleEvent(client: Socket, data: string) {
         client.emit('chat', "Bonjour")
         console.log(data);
         console.log(this.jwtService.decode(client.handshake.headers.authorization));
+
+        const decodedJwt = this.jwtService.decode(client.handshake.headers.authorization);
+        const userMail = decodedJwt['email'];
+        const user = await this.userService.findOne(userMail);
+
+        const chat = {
+            content: data,
+            user: user,
+            isAdmin: false
+        }
+
+        const chatEntity = Chat.create(chat);
+        chatEntity.save();
+
         return data;
+    }
+
+    @SubscribeMessage('chatAdmin')
+    async handleAdminMessage(client: Socket, data: string) {
+        const decodedJwt = this.jwtService.decode(client.handshake.headers.authorization);
+        const userMail = decodedJwt['email'];
+        const user = await this.userService.findOne(userMail);
+
+        client.to(user.socketId).emit('chatAdmin', data);
+
     }
 
 }

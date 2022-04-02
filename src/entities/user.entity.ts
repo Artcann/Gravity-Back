@@ -10,6 +10,7 @@ import { ChallengeSubmission } from "./challenge-submission.entity";
 import { ChallengeStatus } from "./challenge-status.entity";
 import { Challenge } from "./challenge.entity";
 import { Member } from "./member.entity";
+import { Chat } from "./chat.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -82,6 +83,9 @@ export class User extends BaseEntity {
   @Column({nullable: true})
   url: string;
 
+  @Column({nullable: true})
+  socketId: string;
+
   @Exclude()
   @ManyToMany(() => Role, {cascade: true, eager: true})
   @JoinTable()
@@ -106,6 +110,10 @@ export class User extends BaseEntity {
   @Exclude()
   @OneToMany(() => ChallengeStatus, challengeStatus => challengeStatus.user)
   challenge_status: ChallengeStatus[];
+
+  @Exclude()
+  @OneToMany(() => Chat, chat => chat.user)
+  chat: Chat[];
 
   @BeforeInsert()
   async hashPassword() {
