@@ -58,7 +58,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
         const chatEntity = Chat.create(chat);
         chatEntity.save();
-
+        console.log("sending", data, "to room chat to user with socketId :", user.socketId)
         client.to(user.socketId).emit('chat', data);
 
         return data;
