@@ -41,8 +41,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     @SubscribeMessage('chat')
     async handleEvent(client: Socket, data: string) {
-        client.emit('chat', "Un message à été reçu")
-        client.to(client.id).emit('chat', "Ceci est un message privé " + data)
+        client.emit('chat', "Message 1 : " + data)
+        client.to(client.id).emit('chat', "Message 2 : " + data)
         console.log(data);
         console.log(this.jwtService.decode(client.handshake.headers.authorization));
 
