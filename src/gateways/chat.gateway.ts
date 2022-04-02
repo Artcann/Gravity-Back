@@ -31,6 +31,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
         client.join(socketId);
 
+        client.emit('session', socketId);
+
         return client.id;
     }
     afterInit(server: any) {
