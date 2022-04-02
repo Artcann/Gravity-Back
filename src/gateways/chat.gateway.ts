@@ -42,6 +42,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @SubscribeMessage('chat')
     async handleEvent(client: Socket, data: string) {
         client.emit('chat', "Bonjour")
+        
         console.log(data);
         console.log(this.jwtService.decode(client.handshake.headers.authorization));
 
@@ -58,6 +59,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         const chatEntity = Chat.create(chat);
         chatEntity.save();
 
+        client.to(user.socketId).emit('chat', data);
+
         return data;
     }
 
@@ -66,6 +69,15 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         const decodedJwt = this.jwtService.decode(client.handshake.headers.authorization);
         const userMail = decodedJwt['email'];
         const user = await this.userService.findOne(userMail);
+
+        const chat = {
+            content: data,
+            user: user,
+            isAdmin: true
+        }
+
+        const chatEntity = Chat.create(chat);
+        chatEntity.save();
 
         client.to(user.socketId).emit('chatAdmin', data);
 
