@@ -28,6 +28,7 @@ export class ChatGateway
   ) {}
 
   @WebSocketServer() wss: Server;
+  
   handleDisconnect(client: Socket) {
     client.leave(client.id);
   }
@@ -42,7 +43,7 @@ export class ChatGateway
     user.socketId = socketId;
     user.save();
 
-    //client.join(socketId);
+    client.join(socketId);
     //client.emit('session', socketId);
     return client.id;
   }
@@ -52,11 +53,7 @@ export class ChatGateway
 
   @SubscribeMessage('chat')
   async handleEvent(client: Socket, data: string) {
-    client.emit('chat', 'Message 1 : ' + data);
-    this.wss.to(client.id).emit('chat', 'Message 2 : ' + data);
-    console.log(data);
-    console.log(this.jwtService.decode(client.handshake.headers.authorization));
-
+  
     const decodedJwt = this.jwtService.decode(
       client.handshake.headers.authorization,
     );
@@ -75,8 +72,14 @@ export class ChatGateway
     //console.log("sending", data, "to room chat to user with socketId :", user.socketId)
     //console.log("actual socket id : ", client.id)
 
-    //client.to(user.socketId).emit('chat', data);
     //client.to(client.id).emit('chat', data);
+    client.emit('chat', 'Message 1 : ' + data);
+    this.wss.to(client.id).emit('chat', 'Message 2 : ' + data);
+    this.wss.to(user.socketId).emit('chat', 'Message 3 : ' + data);
+
+    console.log(data , "|", client.id, "|", user.socketId);
+    console.log(this.jwtService.decode(client.handshake.headers.authorization));
+
     return data;
   }
 
