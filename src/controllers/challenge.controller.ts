@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, Req, Request, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpException, Param, Post, Req, Request, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { Roles } from "src/decorators/roles.decorator";
+import { CreateChallengeDto } from "src/dto/challenge/create-challenge.dto";
 import { CreateSubmissionDto } from "src/dto/challenge/create-submission.dto";
 import { ChallengeStatusEnum } from "src/entities/enums/challenge-status.enum";
 import { ChallengeTypeEnum } from "src/entities/enums/challenge-type.enum";
@@ -59,6 +60,13 @@ export class ChallengeController {
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RoleEnum.Admin)
+    @Post('create')
+    createChallenge(@Body() createChallengeDto: CreateChallengeDto) {
+        return this.challengeService.create(createChallengeDto);
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.VerifiedUser)
     @Post(':id/image')
     @UseInterceptors(FileInterceptor('image', {
@@ -77,7 +85,18 @@ export class ChallengeController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.ListMember)
     @Delete(':id/submission')
-    deleteSubmission(@Request() req, @Param('id') id: string) {
+    async deleteSubmission(@Request() req, @Param('id') id: string) {
+        if(await this.challengeService.challengeOwnedByUser(req.user.userId, id)) {
+            return this.challengeService.deleteSubmission(id);
+        } else {
+            throw new UnauthorizedException();
+        }
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RoleEnum.Admin)
+    @Delete(':id/submission')
+    deleteSubmissionAdmin(@Param('id') id: string) {
         return this.challengeService.deleteSubmission(id);
     }
 

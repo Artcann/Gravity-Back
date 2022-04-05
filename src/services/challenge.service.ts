@@ -1,4 +1,5 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { CreateChallengeDto } from "src/dto/challenge/create-challenge.dto";
 import { CreateSubmissionDto } from "src/dto/challenge/create-submission.dto";
 import { ChallengeStatus } from "src/entities/challenge-status.entity";
 import { ChallengeSubmission } from "src/entities/challenge-submission.entity";
@@ -11,6 +12,11 @@ import { User } from "src/entities/user.entity";
 @Injectable()
 export class ChallengeService {
 
+    create(createChallengeDto: CreateChallengeDto) {
+        const challenge = Challenge.create(createChallengeDto);
+        return challenge.save();
+    }
+
     async getNewChallengesByType(id: string, type: ChallengeTypeEnum, lang: LanguageEnum) {
         const user = await User.findOne(id);
         let challengesYouParticipatedIn = [];
@@ -19,8 +25,6 @@ export class ChallengeService {
         })
 
         let challenges: any;
-
-        console.log(challengesYouParticipatedIn);
 
         if (challengesYouParticipatedIn.length !== 0) {
             challenges = Challenge.createQueryBuilder('challenge')
@@ -117,6 +121,23 @@ export class ChallengeService {
         submission.save();
 
         return submission;
+    }
+
+    async challengeOwnedByUser(userId: string, challengeId: string) {
+        
+        const submission = await ChallengeSubmission.createQueryBuilder("challengeSubmission")
+            .leftJoinAndSelect('challengeSubmission.user', 'user')
+            .leftJoinAndSelect('challengeSubmission.challenge', 'challenge')
+            .where("challengeSubmission.id = :id", {id: challengeId})
+            .getOne();
+
+        if(submission === undefined) {
+            throw new NotFoundException({
+                message: "Submission with id : " + challengeId +" does not existe in database"
+            });
+        }
+        
+        return submission.user.id === +userId;
     }
 
 }

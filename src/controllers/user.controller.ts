@@ -45,6 +45,13 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.Admin)
+  @Put(':id')
+  updateUserAdmin(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(id, updateUserDto);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleEnum.VerifiedUser)
   @Post('deviceToken')
   addDeviceToken(@Request() req, @Body() addDeviceTokenDto: AddDeviceTokenDto) {
