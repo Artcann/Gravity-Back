@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Request, RequestMapping, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ideahub } from "googleapis/build/src/apis/ideahub";
 import { diskStorage } from "multer";
@@ -6,6 +6,7 @@ import { Roles } from "src/decorators/roles.decorator";
 import { CreateSponsorDto } from "src/dto/sponsor/create-sponsor.dto";
 import { UpdateSponsorDto } from "src/dto/sponsor/update-sponsor.dto";
 import { RoleEnum } from "src/entities/enums/role.enum";
+import { SponsorTypeEnum } from "src/entities/enums/sponsor-type.enum";
 import { Role } from "src/entities/role.entity";
 import { QuaranteMilleEuros } from "src/entities/sponsor.entity";
 import { JwtAuthGuard } from "src/guards/jwt-auth.guard";
@@ -26,22 +27,22 @@ export class SponsorController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.VerifiedUser)
     @Get('all')
-    getClassicSponsor() {
-        return this.sponsorService.getClassicSponsors();
+    getClassicSponsor(@Request() req) {
+        return this.sponsorService.getSponsorByType(SponsorTypeEnum.CLASSIC, req.user.lang);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.VerifiedUser)
     @Get('/food/all')
-    getFoodSponsors() {
-        return this.sponsorService.getFoodSponsors()
+    getFoodSponsors(@Request() req) {
+        return this.sponsorService.getSponsorByType(SponsorTypeEnum.FOOD, req.user.lang);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.VerifiedUser)
     @Get(':id')
-    read(@Param('id') id: string) {
-        return this.sponsorService.read(id);
+    read(@Param('id') id: string, @Request() req) {
+        return this.sponsorService.read(id, req.user.lang);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)

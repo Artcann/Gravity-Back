@@ -2,6 +2,7 @@ import { HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { Point } from "geojson";
 import { CreateSponsorDto } from "src/dto/sponsor/create-sponsor.dto";
 import { UpdateSponsorDto } from "src/dto/sponsor/update-sponsor.dto";
+import { LanguageEnum } from "src/entities/enums/language.enum";
 import { SponsorTypeEnum } from "src/entities/enums/sponsor-type.enum";
 import { QuaranteMilleEuros } from "src/entities/sponsor.entity";
 
@@ -21,24 +22,20 @@ export class SponsorService {
         return sponsor;
     }
 
-    read(id: string) {
-        return QuaranteMilleEuros.findOne(id);
+    read(id: string, lang: LanguageEnum) {
+        return QuaranteMilleEuros.createQueryBuilder("sponsor")
+            .leftJoinAndSelect("sponsor.translation", "translation", 
+            "translation.language = :language", {language: lang})
+            .where("sponsor.id = :id", {id: id})
+            .getOne();
     }
 
-    getClassicSponsors() {
-        return QuaranteMilleEuros.find({
-            where: {
-                type: SponsorTypeEnum.CLASSIC
-            }
-        });
-    }
-
-    getFoodSponsors() {
-        return QuaranteMilleEuros.find({
-            where: {
-                type: SponsorTypeEnum.FOOD
-            }
-        })
+    getSponsorByType(type: SponsorTypeEnum, lang: LanguageEnum) {
+        return QuaranteMilleEuros.createQueryBuilder("sponsor")
+            .leftJoinAndSelect("sponsor.translation", "translation", 
+            "translation.language = :language", {language: lang})
+            .where("sponsor.type = :type", {type: type})
+            .getMany();
     }
 
     update(id: string, updateSponsorDto: UpdateSponsorDto) {
