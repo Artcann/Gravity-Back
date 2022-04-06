@@ -29,13 +29,14 @@ export class ChallengeService {
         if (challengesYouParticipatedIn.length !== 0) {
             challenges = Challenge.createQueryBuilder('challenge')
                 .leftJoinAndSelect("challenge.translation", "translation", "translation.language = :language", {language: lang})
-                .where("challenge.id NOT IN (:...challenges) AND challenge.type = :challengeType", 
-                {challenges: challengesYouParticipatedIn, challengeType: type})
+                .where("challenge.id NOT IN (:...challenges) AND challenge.type = :challengeType AND NOT (challenge.type = :type AND challenge.expiredAt < :date)", 
+                {challenges: challengesYouParticipatedIn, challengeType: type, type: ChallengeTypeEnum.SPECIAL, date: new Date()})
                 .getMany();
         } else {
             challenges = Challenge.createQueryBuilder('challenge')
                 .leftJoinAndSelect("challenge.translation", "translation", "translation.language = :language", {language: lang})
-                .where("challenge.type = :challengeType", { challengeType: type})
+                .where("challenge.type = :challengeType AND NOT (challenge.type = :type AND challenge.expiredAt < :date)",
+                { challengeType: type, type: ChallengeTypeEnum.SPECIAL, date: new Date() })
                 .getMany();
         }
 
@@ -47,8 +48,8 @@ export class ChallengeService {
         .innerJoinAndSelect('challengeStatus.user', 'user')
         .innerJoinAndSelect('challengeStatus.challenge', 'challenge')
         .leftJoinAndSelect("challenge.translation", "translation", "translation.language = :language", {language: lang})
-        .where("challengeStatus.user = :id AND challengeStatus.status = :status",
-        {id: userId, status: status})
+        .where("challengeStatus.user = :id AND challengeStatus.status = :status AND NOT (challenge.type = :type AND challenge.expiredAt < :date)",
+        {id: userId, status: status, type: ChallengeTypeEnum.SPECIAL, date: new Date() })
         .getMany()
 
         let challengeList = [];
@@ -63,11 +64,12 @@ export class ChallengeService {
         return challengeList;
     }
 
-    async getChallengeById(challengeId: string, lang: LanguageEnum) {
+    async getChallengeById(challengeId: string, userId: string, lang: LanguageEnum) {
         const challenge = await Challenge.createQueryBuilder("challenge")
             .leftJoinAndSelect('challenge.challenge_submission', 'challenge_submission')
+            .leftJoin('challenge_submission.user', 'user')
             .leftJoinAndSelect("challenge.translation", "translation", "translation.language = :language", {language: lang})
-            .where('challenge.id = :id', {id: challengeId})
+            .where('challenge.id = :challengeId AND user.id = :userId', {challengeId: challengeId, userId: userId})
             .getMany();
 
         return challenge;
@@ -77,6 +79,7 @@ export class ChallengeService {
         const challenges = await Challenge.createQueryBuilder("challenge")
             .leftJoinAndSelect('challenge.challenge_submission', 'challenge_submission')
             .leftJoinAndSelect('challenge.translation', 'translation')
+            .where("NOT (challenge.type = :type AND challenge.expiredAt < :date)", { type: ChallengeTypeEnum.SPECIAL, date: new Date() })
             .getMany();
         return challenges;
     }
@@ -114,13 +117,26 @@ export class ChallengeService {
         const user = await User.findOne(+userId);
         const challenge = await Challenge.findOne(createSubmissionDto.challengeId);
 
-        const status = ChallengeStatus.create({
-            user: user,
-            challenge: challenge,
-            status: ChallengeStatusEnum.PROCESSING,
-        });
+        let status = await ChallengeStatus.createQueryBuilder("status")
+            .leftJoin("status.user", "user")
+            .leftJoin("status.challenge", "challenge")
+            .where("user.id = :userId AND challenge.id = :challengeId", {userId: userId, challengeId: createSubmissionDto.challengeId})
+            .getOne();
+        
+        if (!status) {
+            const newStatus = ChallengeStatus.create({
+                user: user,
+                challenge: challenge,
+                status: ChallengeStatusEnum.PROCESSING,
+            });
+    
+            newStatus.save();
+        } else if (status.status !== ChallengeStatusEnum.PROCESSING) {
+            status.status = ChallengeStatusEnum.PROCESSING;
+            status.save();
+        }
 
-        status.save();
+        
 
         const payload = {user: user, challenge: challenge, ...createSubmissionDto};
 
@@ -146,6 +162,11 @@ export class ChallengeService {
         }
         
         return submission.user.id === +userId;
+    }
+
+    async isChallengeClosed(challengeId: string) {
+        const challenge = await Challenge.findOne(challengeId);
+        return challenge.type === ChallengeTypeEnum.SPECIAL && challenge.expiredAt.getTime() < new Date().getTime();
     }
 
 }
