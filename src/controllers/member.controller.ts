@@ -24,6 +24,13 @@ export class MemberController {
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RoleEnum.Admin)
+    @Get('admin/all')
+    getAll() {
+        return this.memberService.getAll();
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.User)
     @Get(':id')
     read(@Param('id') id: string) {

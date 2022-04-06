@@ -38,6 +38,13 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.Admin)
+  @Get('all')
+  getAllUser() {
+    return this.userService.getAll();
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleEnum.VerifiedUser)
   @Put() 
   updateUser(@Request() req, @Body() updateUserDto: UpdateUserDto) {

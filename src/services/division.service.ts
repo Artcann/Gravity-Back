@@ -9,4 +9,8 @@ export class DivisionService {
         return Division.findOne({divisionLabel: label});
     }
 
+    getAll() {
+        return Division.find();
+    }
+
 }

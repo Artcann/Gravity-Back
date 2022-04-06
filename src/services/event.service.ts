@@ -58,7 +58,13 @@ export class EventService {
       .getMany();
   }
 
-  getAllEvent(language: string): Promise<Event[]> {
+  getAllEvent() {
+    return Event.createQueryBuilder('event')
+      .leftJoinAndSelect('event.translation', 'translation')
+      .getMany();
+  }
+
+  getAllEventByLang(language: string): Promise<Event[]> {
     return Event.createQueryBuilder('event')
       .innerJoinAndSelect('event.translation', 'translation')
       .where("translation.language = :language", {language})

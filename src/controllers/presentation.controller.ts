@@ -26,6 +26,13 @@ export class PresentationController {
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RoleEnum.Admin)
+    @Get('admin/all')
+    getAll() {
+        return this.presentationService.getAll();
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.VerifiedUser)
     @Get(':id')
     read(@Param('id') id: string) {

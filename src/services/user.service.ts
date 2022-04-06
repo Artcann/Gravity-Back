@@ -33,6 +33,10 @@ export class UserService {
     return User.findOne({email: email.toLocaleLowerCase()});
   }
 
+  getAll() {
+    return User.find();
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto) {
     const user = await User.findOne(id);
     Object.assign(user, updateUserDto);

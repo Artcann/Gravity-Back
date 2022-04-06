@@ -39,6 +39,13 @@ export class SponsorController {
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RoleEnum.Admin)
+    @Get('admin/all')
+    getAllSponsor() {
+        return this.sponsorService.getAll();
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.VerifiedUser)
     @Get(':id')
     read(@Param('id') id: string, @Request() req) {

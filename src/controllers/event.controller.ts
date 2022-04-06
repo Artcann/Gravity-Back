@@ -21,10 +21,17 @@ export class EventController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.Admin)
+  @Get('admin/all')
+  getAllEventAdmin() {
+    return this.eventService.getAllEvent();
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleEnum.VerifiedUser)
   @Get('all')
   getAllEvent(@Request() req): Promise<Event[]> {
-    return this.eventService.getAllEvent(req.user.lang);
+    return this.eventService.getAllEventByLang(req.user.lang);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

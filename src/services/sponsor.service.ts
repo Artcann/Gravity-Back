@@ -30,6 +30,12 @@ export class SponsorService {
             .getOne();
     }
 
+    getAll() {
+        return QuaranteMilleEuros.createQueryBuilder("sponsor")
+            .leftJoinAndSelect("sponsor.translation", "translation")
+            .getMany();
+    }
+
     getSponsorByType(type: SponsorTypeEnum, lang: LanguageEnum) {
         return QuaranteMilleEuros.createQueryBuilder("sponsor")
             .leftJoinAndSelect("sponsor.translation", "translation", 

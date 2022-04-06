@@ -14,6 +14,10 @@ export class PresentationService {
         return presentation;
     }
 
+    getAll() {
+        return Presentation.find();
+    }
+
     read(id: string) {
         return Presentation.findOne(id);
     }

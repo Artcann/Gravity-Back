@@ -73,6 +73,14 @@ export class ChallengeService {
         return challenge;
     }
 
+    async getAll() {
+        const challenges = await Challenge.createQueryBuilder("challenge")
+            .leftJoinAndSelect('challenge.challenge_submission', 'challenge_submission')
+            .leftJoinAndSelect('challenge.translation', 'translation')
+            .getMany();
+        return challenges;
+    }
+
     async updateSubmission(userId: string, challengeId: string, filepath: string, status: boolean) {
         const user = await User.findOne(userId);
         const challenge = await Challenge.findOne(challengeId);
