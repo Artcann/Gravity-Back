@@ -28,6 +28,6 @@ export class Challenge extends BaseEntity {
     @OneToMany(() => ChallengeStatus, challengeStatus => challengeStatus.challenge)
     challenge_status: ChallengeStatus[];
 
-    @OneToMany(() => ChallengeTranslation, translation => translation.challenge, {eager: true})
+    @OneToMany(() => ChallengeTranslation, translation => translation.challenge, {cascade:true, eager: true})
     translation: ChallengeTranslation[];
 }
