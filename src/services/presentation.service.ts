@@ -23,6 +23,7 @@ export class PresentationService {
     }
 
     update(id: string, updatePresentationDto: UpdatePresentationDto) {
+        console.log(id);
         return Presentation.update(id, updatePresentationDto);
     }
 

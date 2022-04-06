@@ -6,13 +6,13 @@ export class UpdatePresentationDto {
     
     @IsOptional()
     @IsEnum(PresentationEnum)
-    type?: PresentationEnum;
+    type: PresentationEnum;
 
     @IsOptional()
     @IsEnum(LanguageEnum)
-    language?: LanguageEnum;
+    language: LanguageEnum;
 
     @IsOptional()
     @IsString()
-    content?: string;
+    content: string;
 }

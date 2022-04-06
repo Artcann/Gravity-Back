@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common";
 import { Roles } from "src/decorators/roles.decorator";
 import { CreatePresentationDto } from "src/dto/presentation/create-presentation.dto";
+import { UpdatePresentationDto } from "src/dto/presentation/update-presentation.dto";
 import { RoleEnum } from "src/entities/enums/role.enum";
 import { Presentation } from "src/entities/presentation.entity";
 import { JwtAuthGuard } from "src/guards/jwt-auth.guard";
@@ -40,14 +41,14 @@ export class PresentationController {
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(RoleEnum.ListMember)
-    @Post('update/:id')
-    update(@Param(':id') id: string, updatePresentationDto) {
+    @Roles(RoleEnum.Admin)
+    @Put('update/:id')
+    update(@Param(':id') id: string, @Body() updatePresentationDto: UpdatePresentationDto) {
         return this.presentationService.update(id, updatePresentationDto);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(RoleEnum.ListMember)
+    @Roles(RoleEnum.Admin)
     @Delete(':id')
     delete(@Param('id') id: string) {
         return this.presentationService.delete(id);
