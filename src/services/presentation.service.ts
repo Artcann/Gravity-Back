@@ -14,11 +14,16 @@ export class PresentationService {
         return presentation;
     }
 
+    getAll() {
+        return Presentation.find();
+    }
+
     read(id: string) {
         return Presentation.findOne(id);
     }
 
     update(id: string, updatePresentationDto: UpdatePresentationDto) {
+        console.log(id);
         return Presentation.update(id, updatePresentationDto);
     }
 

@@ -19,6 +19,10 @@ export class MemberService {
         return Member.findOne(id);
     }
 
+    getAll() {
+        return Member.find();
+    }
+
     update(id: string, updateMemberDto: UpdateMemberDto): Promise<UpdateResult> {
         return Member.update(id, updateMemberDto);
     }

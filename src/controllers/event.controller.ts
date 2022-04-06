@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Request, UseGuards } from '@nestjs/common';
 import { Roles } from 'src/decorators/roles.decorator';
 import { CreateEventDto } from 'src/dto/event/create-event.dto';
 import { UpdateEventDto } from 'src/dto/event/update-event.dto';
@@ -21,10 +21,17 @@ export class EventController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.Admin)
+  @Get('admin/all')
+  getAllEventAdmin() {
+    return this.eventService.getAllEvent();
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleEnum.VerifiedUser)
   @Get('all')
   getAllEvent(@Request() req): Promise<Event[]> {
-    return this.eventService.getAllEvent(req.user.lang);
+    return this.eventService.getAllEventByLang(req.user.lang);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -63,7 +70,12 @@ export class EventController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleEnum.ListMember)
   @Delete(':id')
-  delete(@Param('id') id: string) {
+  async delete(@Param('id') id: string) {
+    if(!(await Event.findOne(id))){
+      throw new NotFoundException({
+        message: "Cet évenement n'existe pas dans la base"
+      })
+    }
     return this.eventService.delete(id);
   }
 }

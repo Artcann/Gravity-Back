@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, Param, Post, Req, Request, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, ForbiddenException, Get, HttpException, Param, Post, Req, Request, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { Roles } from "src/decorators/roles.decorator";
@@ -53,10 +53,17 @@ export class ChallengeController {
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RoleEnum.Admin)
+    @Get('admin/all')
+    getAllChallenges() {
+        return this.challengeService.getAll();
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.VerifiedUser)
     @Get(':id')
     getChallengeById(@Request() req, @Param('id') id: string) {
-        return this.challengeService.getChallengeById(id, req.user.lang);
+        return this.challengeService.getChallengeById(id, req.user.userId, req.user.lang);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
@@ -95,7 +102,7 @@ export class ChallengeController {
 
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.Admin)
-    @Delete(':id/submission')
+    @Delete('admin/:id/submission')
     deleteSubmissionAdmin(@Param('id') id: string) {
         return this.challengeService.deleteSubmission(id);
     }
@@ -110,7 +117,12 @@ export class ChallengeController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.VerifiedUser)
     @Post('submission')
-    submitChallengeAnswer(@Body() createSubmissionDto: CreateSubmissionDto, @Request() req) {
+    async submitChallengeAnswer(@Body() createSubmissionDto: CreateSubmissionDto, @Request() req) {
+        if (await this.challengeService.isChallengeClosed(createSubmissionDto.challengeId)) {
+            throw new ForbiddenException({
+                message: "This event is closed"
+            })
+        }
         return this.challengeService.submitChallengeAnswer(createSubmissionDto, req.user.userId);
     }
 }
