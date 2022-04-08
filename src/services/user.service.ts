@@ -28,12 +28,12 @@ export class UserService {
     if(createUserDto.first_name) {
       user.first_name = createUserDto.first_name.charAt(0).toUpperCase() + createUserDto.first_name.slice(1).toLocaleLowerCase();
     } else {
-      user.first_name = "";
+      user.first_name = " ";
     }
     if(createUserDto.last_name) {
       user.last_name = createUserDto.last_name.charAt(0).toUpperCase() + createUserDto.last_name.slice(1).toLocaleLowerCase();
     } else {
-      user.last_name = "";
+      user.last_name = " ";
     }
     await user.save();
 
