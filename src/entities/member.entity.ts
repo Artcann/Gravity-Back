@@ -29,7 +29,7 @@ export class Member extends BaseEntity {
     @Column({name: "user_id"})
     userId: number;
 
-    @OneToOne(() => User)
+    @OneToOne(() => User, {nullable: true})
     @JoinColumn({name: "user_id"})
     user: User;
 
