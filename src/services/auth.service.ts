@@ -82,7 +82,8 @@ export class AuthService {
     const source = readFileSync(htmlPath, 'utf-8').toString();
 
     const templateVars = {
-      name: user.first_name !== undefined ? user.first_name : ""
+      name: user.first_name !== undefined ? user.first_name : "",
+      comfirmLink: process.env.API_URL + "auth/confirmation/" + token
     }
 
     const template = ejs.render(source, templateVars);
