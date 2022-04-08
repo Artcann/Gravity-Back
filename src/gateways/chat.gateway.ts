@@ -73,9 +73,9 @@ export class ChatGateway
     //console.log("actual socket id : ", client.id)
 
     //client.to(client.id).emit('chat', data);
-    client.emit('chat', 'Message 1 : ' + data);
+    /* client.emit('chat', 'Message 1 : ' + data);
     this.wss.to(client.id).emit('chat', 'Message 2 : ' + data);
-    this.wss.to(user.socketId).emit('chat', 'Message 3 : ' + data);
+    this.wss.to(user.socketId).emit('chat', 'Message 3 : ' + data); */
 
     console.log(data , "|", client.id, "|", user.socketId);
     console.log(this.jwtService.decode(client.handshake.headers.authorization));
