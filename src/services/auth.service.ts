@@ -83,7 +83,7 @@ export class AuthService {
 
     const templateVars = {
       name: user.first_name !== undefined ? user.first_name : "",
-      comfirmLink: process.env.API_URL + "auth/confirmation/" + token
+      comfirmLink: process.env.API_URL + "auth/confirmation/" + token.token
     }
 
     const template = ejs.render(source, templateVars);
