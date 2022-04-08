@@ -32,6 +32,8 @@ import { NotificationController } from './controllers/notification.controller';
 import { NotificationService } from './services/notification.service';
 import { ChatGateway } from './gateways/chat.gateway';
 import { ChatService } from './services/chat.service';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 
 
@@ -43,7 +45,8 @@ import { ChatService } from './services/chat.service';
     secret: process.env.JWT_SECRET,
     signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
   }),
-  TypeOrmModule.forRoot(typeOrmConfig)],
+  TypeOrmModule.forRoot(typeOrmConfig),
+  ],
   controllers: [AuthController, UserController, EventController, MemberController, 
     StaticController, PresentationController, SponsorController, ChallengeController,
     DivisionController, NotificationController],

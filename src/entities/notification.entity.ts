@@ -1,7 +1,6 @@
-import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { NotificationActionEnum } from "./enums/notification-action.enum";
-import { Group } from "./group.entity";
-import { User } from "./user.entity";
+import { NotificationStatus } from "./notification-status.entity";
 
 @Entity()
 export class Notification extends BaseEntity {
@@ -10,9 +9,6 @@ export class Notification extends BaseEntity {
 
     @Column()
     content: string;
-
-    @Column({default: true})
-    isNew: boolean;
 
     @Column({nullable: true})
     title: string;
@@ -23,7 +19,9 @@ export class Notification extends BaseEntity {
     @Column({nullable: true})
     url: string;
 
-    @ManyToOne(() => User, user => user.notifications)
-    user: User;
+    @OneToMany(() => NotificationStatus, notificationStatus => notificationStatus.notification, {eager: true})
+    notification_status: NotificationStatus[];
+
+
 
 }

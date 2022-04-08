@@ -8,12 +8,14 @@ import { RoleEnum } from 'src/entities/enums/role.enum';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { ChatService } from 'src/services/chat.service';
+import { NotificationService } from 'src/services/notification.service';
 import { UserService } from 'src/services/user.service';
 
 @Controller('user')
 export class UserController {
 
-  constructor(private userService: UserService, private chatService: ChatService) {}
+  constructor(private userService: UserService, private chatService: ChatService,
+    private notificationService: NotificationService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleEnum.VerifiedUser)
@@ -33,8 +35,32 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleEnum.VerifiedUser)
   @Get('profile')
-  profile(@Request() req) {
-    return this.userService.findOne(req.user.email);
+  async profile(@Request() req) {
+    let user = await this.userService.findOne(req.user.email);
+
+    delete user.password;
+
+    const notification = await this.notificationService.getNotificationByUser(user.id.toString(), req.user.lang);
+
+    let userWithNotification: any = {};
+
+    Object.assign(userWithNotification, user);
+
+    let notificationFormated = [];
+
+    notification.forEach(notification => {
+      notificationFormated.push({
+        id: notification.notification_status[0].id,
+        title: notification.title,
+        content: notification.content,
+        isNew: notification.notification_status[0].isNew,
+        action: notification.action
+      })
+    })
+
+    userWithNotification.notification = notificationFormated;
+
+    return userWithNotification;
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

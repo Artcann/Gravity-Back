@@ -11,6 +11,7 @@ import { ChallengeStatus } from "./challenge-status.entity";
 import { Challenge } from "./challenge.entity";
 import { Member } from "./member.entity";
 import { Chat } from "./chat.entity";
+import { NotificationStatus } from "./notification-status.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -92,15 +93,14 @@ export class User extends BaseEntity {
   role: Role[];
 
   @Exclude()
-  @OneToMany(() => Notification, notification => notification.user, {cascade: true, eager: true})
-  notifications: Notification[]
+  @OneToMany(() => NotificationStatus, notification => notification.user, {eager: true})
+  notification_status: NotificationStatus[]
 
   @OneToMany(() => SocialNetwork, social => social.user, {cascade: true, eager: true})
   @JoinTable()
   socials: SocialNetwork[]
   
-  @ManyToMany(() => Group)
-  @JoinTable()
+  @ManyToMany(() => Group, group => group.user)
   groups: Group[];
 
   @Exclude()
