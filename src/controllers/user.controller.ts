@@ -84,7 +84,7 @@ export class UserController {
       })
     })
 
-    userWithNotification.notification = notificationFormated;
+    userWithNotification.notifications = notificationFormated;
 
     return userWithNotification;
   }
