@@ -1,3 +1,4 @@
+import { ChatController } from './controllers/chat.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -32,9 +33,6 @@ import { NotificationController } from './controllers/notification.controller';
 import { NotificationService } from './services/notification.service';
 import { ChatGateway } from './gateways/chat.gateway';
 import { ChatService } from './services/chat.service';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
-
 
 
 @Module({
@@ -49,7 +47,7 @@ import { join } from 'path';
   ],
   controllers: [AuthController, UserController, EventController, MemberController, 
     StaticController, PresentationController, SponsorController, ChallengeController,
-    DivisionController, NotificationController],
+    DivisionController, NotificationController, ChatController],
 
   providers: [AuthService, UserService, EventService, StaticService, MemberService,
     JwtStrategy, LocalStrategy, PresentationService, SponsorService, ChallengeService,
