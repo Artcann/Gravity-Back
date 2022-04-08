@@ -25,10 +25,10 @@ export class UserService {
     user.role = [baseRole];
     user.groups = [defaultGroup, customGroup];
 
-    if(createUserDto.first_name !== undefined) {
+    if(createUserDto.first_name) {
       user.first_name = createUserDto.first_name.charAt(0).toUpperCase() + createUserDto.first_name.slice(1).toLocaleLowerCase();
     }
-    if(createUserDto.last_name !== undefined) {
+    if(createUserDto.last_name) {
       user.last_name = createUserDto.last_name.charAt(0).toUpperCase() + createUserDto.last_name.slice(1).toLocaleLowerCase();
     }
     await user.save();
