@@ -13,6 +13,13 @@ export class NotificationController {
     constructor(private notificationService: NotificationService) {}
 
     @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RoleEnum.Admin)
+    @Get(':id/:deviceToken')
+    sendNotificationToDevice(@Param('id') notificationId: string, @Param('deviceToken') deviceToken: string) {
+        return this.notificationService.sendNotificationToDevice(notificationId, deviceToken);
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.VerifiedUser)
     @Get('all')
     getNotifications(@Request() req) {

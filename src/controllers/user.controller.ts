@@ -72,7 +72,6 @@ export class UserController {
     } else {
       notificationFormated.push(defaultNotificationEn);
     }
-    
 
     notification.forEach(notification => {
       notificationFormated.push({
@@ -80,7 +79,8 @@ export class UserController {
         title: notification.title,
         content: notification.content,
         isNew: notification.notification_status[0].isNew,
-        action: notification.action
+        action: notification.action,
+        url: notification.url
       })
     })
 

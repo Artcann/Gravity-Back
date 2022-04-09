@@ -27,7 +27,7 @@ export class NotificationService {
         return Notification.createQueryBuilder('notification')
             .leftJoin('notification.notification_status', 'status')
             .leftJoin("status.user", "user")
-            .select(["notification.content", "status.id", "notification.title", "status.isNew", "notification.action"])
+            .select(["notification.content", "status.id", "notification.title", "status.isNew", "notification.action", "notification.url"])
             .where("user.id = :id AND user.language = :lang", {id, lang})
             .getMany();
     }
@@ -79,7 +79,17 @@ export class NotificationService {
 
     }
 
-    sendNotificationToDevice(notificationId: string, deviceToken: string) {
+    async sendNotificationToDevice(notificationId: string, deviceToken: string) {
+        const notification = await Notification.findOne(notificationId);
 
+        const tokens = [deviceToken];
+
+        return await firebase_admin.messaging().sendMulticast({
+            tokens,
+            "notification": {
+                "title": notification.title,
+                "body": notification.content
+            }
+        })
     }
 }
