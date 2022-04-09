@@ -1,6 +1,17 @@
 import { LanguageEnum } from 'src/entities/enums/language.enum';
 import { IsEnum } from 'class-validator';
-import { Body, ClassSerializerInterceptor, Controller, Get, Param, Post, Put, Request, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Request,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { get } from 'http';
 import { Roles } from 'src/decorators/roles.decorator';
 import { AddDeviceTokenDto } from 'src/dto/user/add-device-token.dto';
@@ -16,9 +27,11 @@ import { UserService } from 'src/services/user.service';
 
 @Controller('user')
 export class UserController {
-
-  constructor(private userService: UserService, private chatService: ChatService,
-    private notificationService: NotificationService) {}
+  constructor(
+    private userService: UserService,
+    private chatService: ChatService,
+    private notificationService: NotificationService,
+  ) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleEnum.VerifiedUser)
@@ -43,7 +56,10 @@ export class UserController {
 
     delete user.password;
 
-    let notification = await this.notificationService.getNotificationByUser(user.id.toString(), req.user.lang);
+    let notification = await this.notificationService.getNotificationByUser(
+      user.id.toString(),
+      req.user.lang,
+    );
 
     let userWithNotification: any = {};
 
@@ -53,19 +69,19 @@ export class UserController {
 
     const defaultNotificationFr = {
       id: 0,
-      title: "Bienvenue !",
+      title: 'Bienvenue !',
       content: "Toutes vos notifications s'afficherons ici, restez à l'affut !",
       IsNew: false,
-      action: " "
-    }
+      action: ' ',
+    };
 
     const defaultNotificationEn = {
       id: 0,
-      title: "Welcome !",
-      content: "All of your notification will be displayed here, stay tuned !",
+      title: 'Welcome !',
+      content: 'All of your notification will be displayed here, stay tuned !',
       IsNew: false,
-      action: " "
-    }
+      action: ' ',
+    };
 
     if (req.user.lang === LanguageEnum.FR) {
       notificationFormated.push(defaultNotificationFr);
@@ -73,7 +89,7 @@ export class UserController {
       notificationFormated.push(defaultNotificationEn);
     }
 
-    notification.forEach(notification => {
+    notification.forEach((notification) => {
       notificationFormated.push({
         id: notification.notification_status[0].id,
         title: notification.title,
@@ -98,7 +114,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleEnum.VerifiedUser)
-  @Put() 
+  @Put()
   updateUser(@Request() req, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(req.user.userId, updateUserDto);
   }
@@ -106,7 +122,10 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleEnum.Admin)
   @Put(':id')
-  updateUserAdmin(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  updateUserAdmin(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     return this.userService.update(id, updateUserDto);
   }
 
@@ -114,7 +133,10 @@ export class UserController {
   @Roles(RoleEnum.VerifiedUser)
   @Post('deviceToken')
   addDeviceToken(@Request() req, @Body() addDeviceTokenDto: AddDeviceTokenDto) {
-    return this.userService.updateDeviceToken(req.user.userId, addDeviceTokenDto.deviceToken);
+    return this.userService.updateDeviceToken(
+      req.user.userId,
+      addDeviceTokenDto.deviceToken,
+    );
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -123,5 +145,4 @@ export class UserController {
   addSocials(@Request() req, @Body() addDeviceTokenDto: AddSocialsDto) {
     return this.userService.addSocials(req.user.userId, addDeviceTokenDto);
   }
-
 }
