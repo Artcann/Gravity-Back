@@ -91,7 +91,7 @@ export class ChallengeController {
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(RoleEnum.ListMember)
+    @Roles(RoleEnum.VerifiedUser)
     @Delete(':id/submission')
     async deleteSubmission(@Request() req, @Param('id') id: string) {
         if(await this.challengeService.challengeOwnedByUser(req.user.userId, id)) {
