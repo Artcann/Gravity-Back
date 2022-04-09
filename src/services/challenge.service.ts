@@ -123,6 +123,8 @@ export class ChallengeService {
             .where("user.id = :userId AND challenge.id = :challengeId", {userId: userId, challengeId: createSubmissionDto.challengeId})
             .getOne();
         
+        console.log(status);
+        
         if (!status) {
             const newStatus = ChallengeStatus.create({
                 user: user,
@@ -131,10 +133,13 @@ export class ChallengeService {
             });
     
             newStatus.save();
+            console.log(newStatus);
         } else if (status.status !== ChallengeStatusEnum.PROCESSING) {
             status.status = ChallengeStatusEnum.PROCESSING;
             status.save();
         }
+
+        
 
         
 
