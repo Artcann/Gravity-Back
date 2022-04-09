@@ -1,3 +1,4 @@
+import { ChatController } from './controllers/chat.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -34,7 +35,6 @@ import { ChatGateway } from './gateways/chat.gateway';
 import { ChatService } from './services/chat.service';
 
 
-
 @Module({
   imports: [
   ConfigModule.forRoot({ isGlobal: true}),
@@ -43,10 +43,11 @@ import { ChatService } from './services/chat.service';
     secret: process.env.JWT_SECRET,
     signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
   }),
-  TypeOrmModule.forRoot(typeOrmConfig)],
+  TypeOrmModule.forRoot(typeOrmConfig),
+  ],
   controllers: [AuthController, UserController, EventController, MemberController, 
     StaticController, PresentationController, SponsorController, ChallengeController,
-    DivisionController, NotificationController],
+    DivisionController, NotificationController, ChatController],
 
   providers: [AuthService, UserService, EventService, StaticService, MemberService,
     JwtStrategy, LocalStrategy, PresentationService, SponsorService, ChallengeService,

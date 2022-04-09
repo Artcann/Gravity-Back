@@ -43,7 +43,7 @@ export class PresentationController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.Admin)
     @Put('update/:id')
-    update(@Param(':id') id: string, @Body() updatePresentationDto: UpdatePresentationDto) {
+    update(@Param('id') id: string, @Body() updatePresentationDto: UpdatePresentationDto) {
         return this.presentationService.update(id, updatePresentationDto);
     }
 

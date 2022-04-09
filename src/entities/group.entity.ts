@@ -9,7 +9,7 @@ export class Group extends BaseEntity {
     @Column()
     groupLabel: string;
 
-    @ManyToMany(() => User)
+    @ManyToMany(() => User, user => user.groups)
     @JoinTable()
     user: User[];
 }

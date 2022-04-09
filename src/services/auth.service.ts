@@ -8,7 +8,13 @@ import { RoleEnum } from 'src/entities/enums/role.enum';
 import { EmailVerificationDto } from 'src/dto/auth/emailVerification.dto';
 import { google } from 'googleapis';
 import { Role } from 'src/entities/role.entity';
-import { Roles } from 'src/decorators/roles.decorator';
+import { LanguageEnum } from 'src/entities/enums/language.enum';
+import * as path from 'path';
+import { readFileSync } from 'fs';
+let ejs = require('ejs');
+let juice = require('juice');
+import { htmlToText} from "html-to-text";
+import { juiceResources } from 'juice';
 
 @Injectable()
 export class AuthService {
@@ -69,14 +75,33 @@ export class AuthService {
 
   async sendVerificationMail(user: User, token: Token) {
 
+    const htmlPath = user.language === LanguageEnum.FR
+    ? './ressources/templates/mail-fr.html'
+    : './ressources/templates/mail-en.html';
+
+    const source = readFileSync(htmlPath, 'utf-8').toString();
+
+    const templateVars = {
+      name: user.first_name !== undefined ? user.first_name : "",
+      comfirmLink: process.env.API_URL + "auth/confirmation/" + token.token
+    }
+
+    const template = ejs.render(source, templateVars);
+    const text = htmlToText(template);
+
+    const htmlWithStyle = juice(template);
 
     try {
       await this.transporter.verify();
+
       await this.transporter.sendMail({
-        from: "service@gravity.com",
+        from:{
+          name: "Liste GRAVITY",
+          address: "respo@tech.liste-gravity.fr"},
         to: user.email,
         subject: "Verification Mail",
-        text: process.env.API_URL + "auth/confirmation/" + token.token,
+        text: text,
+        html: htmlWithStyle
       })
     } catch (err) {
       console.error(err);

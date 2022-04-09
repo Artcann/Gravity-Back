@@ -6,15 +6,19 @@ export class CreateMemberDto {
     @IsString()
     first_name: string;
 
+    @IsOptional()
     @IsString()
     last_name: string;
 
+    @IsOptional()
     @IsString()
     nickname: string;
 
-    @IsOptional()
     @IsString()
-    image?: string;
+    image: string;
+
+    @IsString()
+    role: string;
 
     @ValidateNested()
     @Type(() => MemberTranslationDto)

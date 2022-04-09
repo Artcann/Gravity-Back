@@ -14,4 +14,11 @@ export class ChatService {
 
         return chat;
     }
+
+    getConnectedUsers() {
+        return Chat.createQueryBuilder('chat')
+            .leftJoinAndSelect('chat.user', 'user')
+            .distinctOn(['user.id'])
+            .getMany();
+    }
 }

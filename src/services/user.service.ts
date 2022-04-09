@@ -3,7 +3,9 @@ import { userInfo } from 'os';
 import { AddSocialsDto } from 'src/dto/user/add-socials.dto';
 import { CreateUserDto } from 'src/dto/user/create-user.dto';
 import { UpdateUserDto } from 'src/dto/user/update-user.dto';
+import { GroupEnum } from 'src/entities/enums/group.enum';
 import { RoleEnum } from 'src/entities/enums/role.enum';
+import { Group } from 'src/entities/group.entity';
 import { Role } from 'src/entities/role.entity';
 import { SocialNetwork } from 'src/entities/social-network.entity';
 import { User } from 'src/entities/user.entity';
@@ -17,8 +19,22 @@ export class UserService {
     const user = User.create(createUserDto);
 
     const baseRole = await Role.findOne({roleLabel : RoleEnum.User});
+    const defaultGroup = await Group.findOne({groupLabel: GroupEnum.DEFAULT});
+    const customGroup = await Group.findOne({groupLabel: createUserDto.promo})
 
     user.role = [baseRole];
+    user.groups = [defaultGroup, customGroup];
+
+    if(createUserDto.first_name) {
+      user.first_name = createUserDto.first_name.charAt(0).toUpperCase() + createUserDto.first_name.slice(1).toLocaleLowerCase();
+    } else {
+      user.first_name = " ";
+    }
+    if(createUserDto.last_name) {
+      user.last_name = createUserDto.last_name.charAt(0).toUpperCase() + createUserDto.last_name.slice(1).toLocaleLowerCase();
+    } else {
+      user.last_name = " ";
+    }
     await user.save();
 
     delete user.password;
