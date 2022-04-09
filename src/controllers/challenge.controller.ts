@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, ForbiddenException, Get, HttpException, Param, Post, Req, Request, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { chat_v1 } from "googleapis";
 import { diskStorage } from "multer";
 import { Roles } from "src/decorators/roles.decorator";
 import { CreateChallengeDto } from "src/dto/challenge/create-challenge.dto";
@@ -90,11 +91,16 @@ export class ChallengeController {
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(RoleEnum.ListMember)
+    @Roles(RoleEnum.VerifiedUser)
     @Delete(':id/submission')
     async deleteSubmission(@Request() req, @Param('id') id: string) {
         if(await this.challengeService.challengeOwnedByUser(req.user.userId, id)) {
-            return this.challengeService.deleteSubmission(id);
+            const challengeSubmission = await this.challengeService.getChallengeSubmissionById(id);
+            await this.challengeService.deleteSubmission(id);
+            const challenges = await this.challengeService.getChallengeSubmissionByUser(req.user.userId, challengeSubmission.challenge.id.toString());
+            if (challenges.length === 0) {
+                this.challengeService.deleteSubmissionStatus(req.user.userId, challengeSubmission.challenge.id.toString());
+            }
         } else {
             throw new UnauthorizedException();
         }

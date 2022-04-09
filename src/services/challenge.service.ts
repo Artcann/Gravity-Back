@@ -17,6 +17,10 @@ export class ChallengeService {
         return challenge.save();
     }
 
+    async getChallengeSubmissionById(id: string) {
+        return await ChallengeSubmission.findOne(id);
+    }
+
     async getNewChallengesByType(id: string, type: ChallengeTypeEnum, lang: LanguageEnum) {
         const user = await User.findOne(id);
         let challengesYouParticipatedIn = [];
@@ -75,6 +79,16 @@ export class ChallengeService {
         return challenge;
     }
 
+    async getChallengeSubmissionByUser(userId: string, challengeId: string) {
+        const challenge = await ChallengeSubmission.createQueryBuilder("challengeSub")
+            .leftJoin("challengeSub.user", "user")
+            .leftJoin("challengeSub.challenge", "challenge")
+            .where("user.id = :userId AND challenge.id = :challengeId", {userId: userId, challengeId: challengeId})
+            .getMany();
+        
+        return challenge;
+    }
+
     async getAll() {
         const challenges = await Challenge.createQueryBuilder("challenge")
             .leftJoinAndSelect('challenge.challenge_submission', 'challenge_submission')
@@ -122,7 +136,17 @@ export class ChallengeService {
         return submission.content;
     }
 
-    deleteSubmission(submissionId: string) {
+    async deleteSubmissionStatus(userId: string, challengeId: string) {
+        const challengeStatus = await ChallengeStatus.createQueryBuilder("challengeStatus")
+            .leftJoin('challengeStatus.user', 'user')
+            .leftJoin('challengeStatus.challenge', 'challenge')
+            .where('user.id = :user AND challenge.id = :challenge', { user: userId, challenge: challengeId })
+            .getOne();
+
+        return ChallengeStatus.delete(challengeStatus.id);
+    }
+
+    async deleteSubmission(submissionId: string) {
         return ChallengeSubmission.delete(submissionId);
     }
 
@@ -163,9 +187,9 @@ export class ChallengeService {
 
         const payload = {user: user, challenge: challenge, ...createSubmissionDto};
 
-        const submission = await ChallengeSubmission.create(payload);
+        const submission = ChallengeSubmission.create(payload);
 
-        submission.save();
+        await submission.save();
 
         return submission;
     }
