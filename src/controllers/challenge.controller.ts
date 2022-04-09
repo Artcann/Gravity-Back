@@ -94,7 +94,12 @@ export class ChallengeController {
     @Delete(':id/submission')
     async deleteSubmission(@Request() req, @Param('id') id: string) {
         if(await this.challengeService.challengeOwnedByUser(req.user.userId, id)) {
-            return this.challengeService.deleteSubmission(id);
+            this.challengeService.deleteSubmission(id);
+            const challenges = await this.challengeService.getChallengeByUser(req.user.userId, req.user.lang);
+            console.log(challenges);
+            if (challenges.length === 0) {
+                this.challengeService.deleteSubmissionStatus(req.user.userId, id);
+            }
         } else {
             throw new UnauthorizedException();
         }

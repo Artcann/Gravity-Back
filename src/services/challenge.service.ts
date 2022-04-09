@@ -75,6 +75,17 @@ export class ChallengeService {
         return challenge;
     }
 
+    async getChallengeByUser(userId: string, lang: LanguageEnum) {
+        const challenge = await Challenge.createQueryBuilder('challenge')
+            .leftJoinAndSelect('challenge.challenge_submission', 'challenge_submission')
+            .leftJoin('challenge_submission.user', 'user')
+            .leftJoinAndSelect("challenge.translation", "translation", "translation.language = :language", { language: lang })
+            .where('user.id = :userId', { userId: userId })
+            .getMany();
+        
+        return challenge;
+    }
+
     async getAll() {
         const challenges = await Challenge.createQueryBuilder("challenge")
             .leftJoinAndSelect('challenge.challenge_submission', 'challenge_submission')
@@ -122,7 +133,17 @@ export class ChallengeService {
         return submission.content;
     }
 
-    deleteSubmission(submissionId: string) {
+    async deleteSubmissionStatus(userId: string, challengeId: string) {
+        const challengeStatus = await ChallengeStatus.createQueryBuilder("challengeStatus")
+            .leftJoin('challengeStatus.user', 'user')
+            .leftJoin('challengeStatus.challenge', 'challenge')
+            .where('user.id = :user AND challenge.id = :challenge', { user: userId, challenge: challengeId })
+            .getOne();
+        
+        return ChallengeStatus.delete(challengeStatus.id);
+    }
+
+    async deleteSubmission(submissionId: string) {
         return ChallengeSubmission.delete(submissionId);
     }
 
@@ -163,9 +184,9 @@ export class ChallengeService {
 
         const payload = {user: user, challenge: challenge, ...createSubmissionDto};
 
-        const submission = await ChallengeSubmission.create(payload);
+        const submission = ChallengeSubmission.create(payload);
 
-        submission.save();
+        await submission.save();
 
         return submission;
     }
