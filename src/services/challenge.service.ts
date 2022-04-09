@@ -84,9 +84,29 @@ export class ChallengeService {
         return challenges;
     }
 
-    async updateSubmission(userId: string, challengeId: string, filepath: string, status: boolean) {
+    async updateSubmission(userId: string, challengeId: string, filepath: string, acceptToShare: boolean) {
         const user = await User.findOne(userId);
         const challenge = await Challenge.findOne(challengeId);
+
+        let status = await ChallengeStatus.createQueryBuilder("status")
+            .leftJoin("status.user", "user")
+            .leftJoin("status.challenge", "challenge")
+            .where("user.id = :userId AND challenge.id = :challengeId", {userId: userId, challengeId: challengeId})
+            .getOne();
+        
+        
+        if (!status) {
+            const newStatus = ChallengeStatus.create({
+                user: user,
+                challenge: challenge,
+                status: ChallengeStatusEnum.PROCESSING,
+            });
+    
+            newStatus.save();
+        } else if (status.status !== ChallengeStatusEnum.PROCESSING) {
+            status.status = ChallengeStatusEnum.PROCESSING;
+            status.save();
+        }
 
 
         const submission = ChallengeSubmission.create({
@@ -94,7 +114,7 @@ export class ChallengeService {
             challenge: challenge,
             content: filepath,
             isFile: true,
-            acceptToShareImage: status
+            acceptToShareImage: acceptToShare
         })
 
         submission.save();
@@ -123,7 +143,6 @@ export class ChallengeService {
             .where("user.id = :userId AND challenge.id = :challengeId", {userId: userId, challengeId: createSubmissionDto.challengeId})
             .getOne();
         
-        console.log(status);
         
         if (!status) {
             const newStatus = ChallengeStatus.create({
@@ -133,7 +152,6 @@ export class ChallengeService {
             });
     
             newStatus.save();
-            console.log(newStatus);
         } else if (status.status !== ChallengeStatusEnum.PROCESSING) {
             status.status = ChallengeStatusEnum.PROCESSING;
             status.save();
