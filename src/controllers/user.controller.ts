@@ -81,6 +81,7 @@ export class UserController {
       content: 'All of your notification will be displayed here, stay tuned !',
       IsNew: false,
       action: ' ',
+      url: "http://link.liste-gravity.fr"
     };
 
     if (req.user.lang === LanguageEnum.FR) {
