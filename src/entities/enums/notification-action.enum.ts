@@ -6,5 +6,6 @@ export enum NotificationActionEnum {
     HOME = "Home",
     CHAT = "Chat",
     EDIT_ACCOUNT = "EditAccount",
-    SPONSOR_FOOD = "sponsorRestaurant"
+    SPONSOR_FOOD = "sponsorRestaurant",
+    PROFILE = "PublicProfil"
 }
