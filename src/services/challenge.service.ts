@@ -17,6 +17,10 @@ export class ChallengeService {
         return challenge.save();
     }
 
+    async getChallengeSubmissionById(id: string) {
+        return await ChallengeSubmission.findOne(id);
+    }
+
     async getNewChallengesByType(id: string, type: ChallengeTypeEnum, lang: LanguageEnum) {
         const user = await User.findOne(id);
         let challengesYouParticipatedIn = [];
@@ -75,12 +79,11 @@ export class ChallengeService {
         return challenge;
     }
 
-    async getChallengeByUser(userId: string, lang: LanguageEnum) {
-        const challenge = await Challenge.createQueryBuilder('challenge')
-            .leftJoinAndSelect('challenge.challenge_submission', 'challenge_submission')
-            .leftJoin('challenge_submission.user', 'user')
-            .leftJoinAndSelect("challenge.translation", "translation", "translation.language = :language", { language: lang })
-            .where('user.id = :userId', { userId: userId })
+    async getChallengeSubmissionByUser(userId: string, challengeId: string) {
+        const challenge = await ChallengeSubmission.createQueryBuilder("challengeSub")
+            .leftJoin("challengeSub.user", "user")
+            .leftJoin("challengeSub.challenge", "challenge")
+            .where("user.id = :userId AND challenge.id = :challengeId", {userId: userId, challengeId: challengeId})
             .getMany();
         
         return challenge;
@@ -139,7 +142,7 @@ export class ChallengeService {
             .leftJoin('challengeStatus.challenge', 'challenge')
             .where('user.id = :user AND challenge.id = :challenge', { user: userId, challenge: challengeId })
             .getOne();
-        
+
         return ChallengeStatus.delete(challengeStatus.id);
     }
 
