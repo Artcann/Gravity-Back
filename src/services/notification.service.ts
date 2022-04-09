@@ -78,4 +78,8 @@ export class NotificationService {
     sendNotificationToUser(userId: string) {
 
     }
+
+    sendNotificationToDevice(notificationId: string, deviceToken: string) {
+
+    }
 }
