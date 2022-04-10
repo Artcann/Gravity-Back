@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateChallengeDto } from "src/dto/challenge/create-challenge.dto";
 import { CreateSubmissionDto } from "src/dto/challenge/create-submission.dto";
+import { ChallengePoint } from "src/entities/challenge-point.entity";
 import { ChallengeStatus } from "src/entities/challenge-status.entity";
 import { ChallengeSubmission } from "src/entities/challenge-submission.entity";
 import { Challenge } from "src/entities/challenge.entity";
@@ -96,6 +97,17 @@ export class ChallengeService {
             .where("NOT (challenge.type = :type AND challenge.expiredAt < :date)", { type: ChallengeTypeEnum.SPECIAL, date: new Date() })
             .getMany();
         return challenges;
+    }
+
+    async getRanking() {
+        const ranking = await User.createQueryBuilder('user')
+        .leftJoinAndSelect('user.challenge_points', 'points')
+        .select(["SUM (points.value) as user_points", "user.id", "user.first_name", "user.last_name", "user.profile_picture"])
+        .groupBy('user.id')
+        .where("points IS NOT NULL")
+        .getRawMany();
+
+        return ranking;
     }
 
     async updateSubmission(userId: string, challengeId: string, filepath: string, acceptToShare: string) {

@@ -56,6 +56,13 @@ export class ChallengeController {
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RoleEnum.VerifiedUser)
+    @Get('ranking')
+    getRanking() {
+        return this.challengeService.getRanking();
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.Admin)
     @Get('admin/all')
     getAllChallenges() {
