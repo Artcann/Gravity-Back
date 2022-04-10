@@ -10,7 +10,7 @@ export class DivisionService {
             .leftJoinAndSelect("division.members", "members")
             .orderBy("members.order")
             .where("division.divisionLabel = :label", {label: label})
-            .getMany();
+            .getOne();
             
     }
 
