@@ -10,7 +10,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 export class DivisionController {
     constructor(private divisionService: DivisionService) {}
 
-    @Post('/label')
+    @Post('label')
     getDivisionByLabel(@Body() getDivisionByLabelDto: GetDivisionByLabelDto) {
         return this.divisionService.getDivisonByLabel(getDivisionByLabelDto.label);
     }
