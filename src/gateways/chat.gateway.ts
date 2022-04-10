@@ -89,11 +89,7 @@ export class ChatGateway
 
   @SubscribeMessage('chatAdmin')
   async handleAdminMessage(client: Socket, data: ChatResponse) {
-    const decodedJwt = this.jwtService.decode(
-      client.handshake.headers.authorization,
-    );
-    const userMail = decodedJwt['email'];
-    const user = await this.userService.findOne(userMail);
+    const user = await this.userService.findOneById(data.userid);
 
     const chat = {
       content: data.content,
