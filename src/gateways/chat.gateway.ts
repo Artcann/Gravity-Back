@@ -89,7 +89,7 @@ export class ChatGateway
     })
 
     const notification = Notification.create({
-      title: "Un utilisateur vous a envoyé un message !",
+      title: user.email + " vous a envoyé un message !",
       content: "Direction l'App Admin pour y répondre !"
     })
 
