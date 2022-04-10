@@ -133,8 +133,6 @@ export class ChallengeService {
 
         submission.save();
 
-        console.log(submission);
-
         return submission.content;
     }
 

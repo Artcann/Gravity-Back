@@ -1,4 +1,4 @@
 export class ChatResponse {
     content: string;
-    userid: string;
+    userId: string;
 }

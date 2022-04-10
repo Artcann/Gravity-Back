@@ -89,7 +89,7 @@ export class ChatGateway
 
   @SubscribeMessage('chatAdmin')
   async handleAdminMessage(client: Socket, data: ChatResponse) {
-    const user = await this.userService.findOneById(data.userid);
+    const user = await this.userService.findOneById(data.userId);
 
     const chat = {
       content: data.content,

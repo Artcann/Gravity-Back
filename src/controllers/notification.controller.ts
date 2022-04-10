@@ -25,7 +25,7 @@ export class NotificationController {
     @Get(':notificationId/user/:userId')
     async sendNotificationToUser(@Param('notificationId') notificationId: string, @Param('userId') userId: string) {
         const user = await this.userService.findOneById(userId);
-        console.log(user);
+
         return this.notificationService.sendNotificationToDevice(notificationId, user.deviceToken)
     }
 
