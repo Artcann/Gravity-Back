@@ -7,6 +7,7 @@ import * as firebase_admin from "firebase-admin";
 import { NotificationStatus } from "src/entities/notification-status.entity";
 import { CreateNotificationDto } from "src/dto/notification/create-notification.dto";
 import { SendNotificationDto } from "src/dto/notification/send-notification.dto";
+import { User } from "src/entities/user.entity";
 
 @Injectable()
 export class NotificationService {
@@ -75,8 +76,48 @@ export class NotificationService {
         })
         }
 
-    sendNotificationToUser(userId: string) {
+        async sendNotificationToGroupCustomNotification(group: GroupEnum, notification: Notification) {
+            const deviceTokenRaw = await Group.createQueryBuilder("group")
+                .leftJoinAndSelect("group.user", "user")
+                .where("group.groupLabel = :group", {group: group})
+                .getOne();
+    
+            let tokens = [];
+            let status = [];
+            deviceTokenRaw.user.forEach(user => {
+                if(user.deviceToken !== null) { 
+                    tokens.push(user.deviceToken);
+                    status.push({
+                        user: user,
+                        notification: notification,
+                    })
+                }
+            });
+    
+            NotificationStatus.save(status);
+    
+            return await firebase_admin.messaging().sendMulticast({
+                tokens,
+                "notification": {
+                    "title": notification.title,
+                    "body": notification.content
+                }
+            })
+            }
+    
 
+    async sendNotificationToUser(userId: number, notification: Notification) {
+        const user = await User.findOne(userId);
+
+        const tokens = [user.deviceToken];
+
+        return await firebase_admin.messaging().sendMulticast({
+            tokens,
+            "notification": {
+                "title": notification.title,
+                "body": notification.content
+            }
+        })
     }
 
     async sendNotificationToDevice(notificationId: string, deviceToken: string) {

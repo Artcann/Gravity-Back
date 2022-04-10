@@ -9,6 +9,9 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { Chat } from 'src/entities/chat.entity';
+import { GroupEnum } from 'src/entities/enums/group.enum';
+import { Notification } from 'src/entities/notification.entity';
+import { NotificationService } from 'src/services/notification.service';
 import { UserService } from 'src/services/user.service';
 import { ChatResponse } from './chat-response';
 
@@ -23,6 +26,7 @@ export class ChatGateway
   constructor(
     private jwtService: JwtService,
     private userService: UserService,
+    private notificationService: NotificationService
   ) {}
 
   @WebSocketServer() wss: Server;
@@ -84,6 +88,13 @@ export class ChatGateway
       userId: user.id
     })
 
+    const notification = Notification.create({
+      title: "Vous avez reçu un message de Gravity !",
+      content: "You received a message from Gravity !"
+    })
+
+    this.notificationService.sendNotificationToGroupCustomNotification(GroupEnum.COM, notification);
+
     return data;
   }
 
@@ -102,6 +113,13 @@ export class ChatGateway
     chatEntity.save();
 
     this.wss.to(user.socketId).emit('chat', data.content);
+
+    const notification = Notification.create({
+      title: "Vous avez reçu un message de Gravity !",
+      content: "You received a message from Gravity !"
+    })
+
+    this.notificationService.sendNotificationToUser(user.id, notification);
 
     this.wss.emit('chatAdmin', {
       sent: true,

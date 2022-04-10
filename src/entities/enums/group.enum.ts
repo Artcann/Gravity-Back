@@ -12,5 +12,6 @@ export enum GroupEnum {
     A1 = "A1",
     A2 = "A2",
     A3 = "A3",
+    COM = "COM",
     DEFAULT = "DEFAULT"
 }
