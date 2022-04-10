@@ -12,6 +12,7 @@ import { Challenge } from "./challenge.entity";
 import { Member } from "./member.entity";
 import { Chat } from "./chat.entity";
 import { NotificationStatus } from "./notification-status.entity";
+import { ChallengePoint } from "./challenge-point.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -110,6 +111,10 @@ export class User extends BaseEntity {
   @Exclude()
   @OneToMany(() => ChallengeStatus, challengeStatus => challengeStatus.user)
   challenge_status: ChallengeStatus[];
+
+  @Exclude()
+  @OneToMany(() => ChallengePoint, challenge_point => challenge_point.user)
+  challenge_points: ChallengePoint[];
 
   @Exclude()
   @OneToMany(() => Chat, chat => chat.user)
