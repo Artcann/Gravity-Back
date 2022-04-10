@@ -1,4 +1,3 @@
-import { ConsoleLogger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import {
   OnGatewayConnection,
@@ -8,8 +7,6 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { time } from 'console';
-import { ExtractJwt } from 'passport-jwt';
 import { Socket, Server } from 'socket.io';
 import { Chat } from 'src/entities/chat.entity';
 import { UserService } from 'src/services/user.service';
@@ -108,8 +105,11 @@ export class ChatGateway
     const chatEntity = Chat.create(chat);
     chatEntity.save();
 
-    this.wss.to(data.socketId).emit('chat', data.content);
+    this.wss.to(user.socketId).emit('chat', data.content);
 
-    client.to(user.socketId).emit('chatAdmin', data);
+    this.wss.emit('chatAdmin', {
+      sent: true,
+      userId: user.id
+    })
   }
 }
