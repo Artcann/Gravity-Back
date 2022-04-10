@@ -6,7 +6,12 @@ import { DivisionLabelEnum } from "src/entities/enums/division-label.enum";
 export class DivisionService {
 
     getDivisonByLabel(label: DivisionLabelEnum) {
-        return Division.findOne({divisionLabel: label});
+        return Division.createQueryBuilder("division")
+            .leftJoinAndSelect("division.members", "members")
+            .orderBy("members.order")
+            .where("division.divisionLabel = :label", {label: label})
+            .getMany();
+            
     }
 
     getAll() {
