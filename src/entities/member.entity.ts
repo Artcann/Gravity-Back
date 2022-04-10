@@ -29,6 +29,9 @@ export class Member extends BaseEntity {
     @Column({name: "user_id", nullable: true})
     userId: number;
 
+    @Column({nullable: true})
+    order: number;
+
     @OneToOne(() => User, {nullable: true})
     @JoinColumn({name: "user_id"})
     user: User;

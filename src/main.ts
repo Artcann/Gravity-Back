@@ -7,6 +7,8 @@ import * as firebase_admin from 'firebase-admin';
 import { ServiceAccount } from 'firebase-admin';
 import { AllExceptionsFilter } from './filters/all-exception.filter';
 
+import * as compression from 'compression';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({ origin: '*' });
@@ -28,6 +30,8 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalGuards();
+
+  app.use(compression())
 
   const {httpAdapter} = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
