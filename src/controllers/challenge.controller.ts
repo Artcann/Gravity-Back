@@ -63,6 +63,13 @@ export class ChallengeController {
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RoleEnum.Admin)
+    @Get(':challenge/submission/:id')
+    getSubmissionByUser(@Param('challenge') challengeId: string, @Param('id') userId: string) {
+        this.challengeService.getChallengeSubmissionByUser(userId, challengeId);
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.VerifiedUser)
     @Get(':id')
     getChallengeById(@Request() req, @Param('id') id: string) {

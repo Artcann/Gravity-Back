@@ -7,16 +7,26 @@ import { RoleEnum } from "src/entities/enums/role.enum";
 import { JwtAuthGuard } from "src/guards/jwt-auth.guard";
 import { RolesGuard } from "src/guards/roles.guard";
 import { NotificationService } from "src/services/notification.service";
+import { UserService } from "src/services/user.service";
 
 @Controller('notification')
 export class NotificationController {
-    constructor(private notificationService: NotificationService) {}
+    constructor(private notificationService: NotificationService, private userService: UserService) {}
 
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.Admin)
     @Get(':id/:deviceToken')
     sendNotificationToDevice(@Param('id') notificationId: string, @Param('deviceToken') deviceToken: string) {
         return this.notificationService.sendNotificationToDevice(notificationId, deviceToken);
+    }
+    
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RoleEnum.Admin)
+    @Get(':notificationId/user/:userId')
+    async sendNotificationToUser(@Param('notificationId') notificationId: string, @Param('userId') userId: string) {
+        const user = await this.userService.findOneById(userId);
+        console.log(user);
+        return this.notificationService.sendNotificationToDevice(notificationId, user.deviceToken)
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)

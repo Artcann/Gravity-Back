@@ -13,6 +13,7 @@ import { ExtractJwt } from 'passport-jwt';
 import { Socket, Server } from 'socket.io';
 import { Chat } from 'src/entities/chat.entity';
 import { UserService } from 'src/services/user.service';
+import { ChatResponse } from './chat-response';
 
 @WebSocketGateway({
   cors: {
@@ -80,11 +81,17 @@ export class ChatGateway
     console.log(data , "|", client.id, "|", user.socketId);
     console.log(this.jwtService.decode(client.handshake.headers.authorization));
 
+    this.wss.emit('chatAdmin', {
+      message: chat.content,
+      socket_id: client.id,
+      userId: user.id
+    })
+
     return data;
   }
 
   @SubscribeMessage('chatAdmin')
-  async handleAdminMessage(client: Socket, data: string) {
+  async handleAdminMessage(client: Socket, data: ChatResponse) {
     const decodedJwt = this.jwtService.decode(
       client.handshake.headers.authorization,
     );
@@ -92,7 +99,7 @@ export class ChatGateway
     const user = await this.userService.findOne(userMail);
 
     const chat = {
-      content: data,
+      content: data.content,
       user: user,
       isAdmin: true,
       date: new Date(),
@@ -100,6 +107,8 @@ export class ChatGateway
 
     const chatEntity = Chat.create(chat);
     chatEntity.save();
+
+    this.wss.to(data.socketId).emit('chat', data.content);
 
     client.to(user.socketId).emit('chatAdmin', data);
   }
