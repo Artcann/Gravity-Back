@@ -98,7 +98,7 @@ export class ChallengeService {
         return challenges;
     }
 
-    async updateSubmission(userId: string, challengeId: string, filepath: string, acceptToShare: boolean) {
+    async updateSubmission(userId: string, challengeId: string, filepath: string, acceptToShare: string) {
         const user = await User.findOne(userId);
         const challenge = await Challenge.findOne(challengeId);
 
@@ -128,10 +128,12 @@ export class ChallengeService {
             challenge: challenge,
             content: filepath,
             isFile: true,
-            acceptToShareImage: acceptToShare
+            acceptToShareImage: JSON.parse(acceptToShare)
         })
 
         submission.save();
+
+        console.log(submission);
 
         return submission.content;
     }

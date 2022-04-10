@@ -31,7 +31,6 @@ export class StaticController {
   @Post('upload')
   @UseInterceptors(FileInterceptor('image', {
       storage: memoryStorage(),
-      
       }))
   async upload(@UploadedFile() image: Express.Multer.File) {
     const filename = "image-" + Date.now() + "-" + Math.round(Math.random() * 1E9)  + ".webp";

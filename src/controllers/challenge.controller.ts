@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, ForbiddenException, Get, HttpException, Param, Post, Req, Request, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { chat_v1 } from "googleapis";
-import { diskStorage } from "multer";
+import { diskStorage, memoryStorage } from "multer";
 import { Roles } from "src/decorators/roles.decorator";
 import { CreateChallengeDto } from "src/dto/challenge/create-challenge.dto";
 import { CreateSubmissionDto } from "src/dto/challenge/create-submission.dto";
@@ -11,6 +11,8 @@ import { RoleEnum } from "src/entities/enums/role.enum";
 import { JwtAuthGuard } from "src/guards/jwt-auth.guard";
 import { RolesGuard } from "src/guards/roles.guard";
 import { ChallengeService } from "src/services/challenge.service";
+
+const sharp = require('sharp');
 
 @Controller('challenge')
 export class ChallengeController {
@@ -78,16 +80,16 @@ export class ChallengeController {
     @Roles(RoleEnum.VerifiedUser)
     @Post(':id/image')
     @UseInterceptors(FileInterceptor('image', {
-        storage: diskStorage({
-            destination: './ressources/images/',
-            filename: (req, file, cb) => {
-            const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
-            cb(null, file.fieldname + "-" + uniqueSuffix + ".jpg");
-            }
-        })
+        storage: memoryStorage(),
     }))
-    upload(@UploadedFile() image: Express.Multer.File, @Request() req, @Param('id') id: string, @Body() body: any) {
-        return this.challengeService.updateSubmission(req.user.userId, id, image.filename, body.status);
+    async upload(@UploadedFile() image: Express.Multer.File, @Request() req, @Param('id') id: string, @Body() body: any) {
+        const filename = "image-" + Date.now() + "-" + Math.round(Math.random() * 1E9)  + ".webp";
+        await sharp(image.buffer)
+            .webp({quality: 50})
+            .toFile("./ressources/images/" + filename)
+    
+        
+        return this.challengeService.updateSubmission(req.user.userId, id, filename, body.status);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
