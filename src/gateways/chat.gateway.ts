@@ -89,8 +89,8 @@ export class ChatGateway
     })
 
     const notification = Notification.create({
-      title: "Vous avez reçu un message de Gravity !",
-      content: "You received a message from Gravity !"
+      title: "Un utilisateur vous a envoyé un message !",
+      content: "Direction l'App Admin pour y répondre !"
     })
 
     this.notificationService.sendNotificationToGroupCustomNotification(GroupEnum.COM, notification);
