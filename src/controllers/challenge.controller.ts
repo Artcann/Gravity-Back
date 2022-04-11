@@ -145,6 +145,13 @@ export class ChallengeController {
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RoleEnum.Admin)
+    @Get('list-user/processing/:id')
+    listUserProcessing(@Param('id') challengeId: string) {
+        return this.challengeService.getUserInProcessingByChallenge(challengeId);
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.VerifiedUser)
     @Post('submission')
     async submitChallengeAnswer(@Body() createSubmissionDto: CreateSubmissionDto, @Request() req) {
