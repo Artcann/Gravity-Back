@@ -4,6 +4,7 @@ import { chat_v1 } from "googleapis";
 import { diskStorage, memoryStorage } from "multer";
 import { Roles } from "src/decorators/roles.decorator";
 import { CreateChallengeDto } from "src/dto/challenge/create-challenge.dto";
+import { CreatePointDto } from "src/dto/challenge/create-point.dto";
 import { CreateSubmissionDto } from "src/dto/challenge/create-submission.dto";
 import { ChallengeStatusEnum } from "src/entities/enums/challenge-status.enum";
 import { ChallengeTypeEnum } from "src/entities/enums/challenge-type.enum";
@@ -120,6 +121,13 @@ export class ChallengeController {
         } else {
             throw new UnauthorizedException();
         }
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RoleEnum.Admin)
+    @Post('admin/add_points')
+    addPoints(@Body() createPointDto: CreatePointDto) {
+        return this.challengeService.createPoint(createPointDto);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
