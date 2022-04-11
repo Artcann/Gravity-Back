@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateChallengeDto } from "src/dto/challenge/create-challenge.dto";
+import { CreatePointDto } from "src/dto/challenge/create-point.dto";
 import { CreateSubmissionDto } from "src/dto/challenge/create-submission.dto";
 import { ChallengePoint } from "src/entities/challenge-point.entity";
 import { ChallengeStatus } from "src/entities/challenge-status.entity";
@@ -104,10 +105,29 @@ export class ChallengeService {
         .leftJoinAndSelect('user.challenge_points', 'points')
         .select(["SUM (points.value) as user_points", "user.id", "user.first_name", "user.last_name", "user.profile_picture"])
         .groupBy('user.id')
-        .where("points IS NOT NULL")
+        .having('SUM (points.value) > 0')
         .getRawMany();
 
         return ranking;
+    }
+
+    async createPoint(createPointdto: CreatePointDto) {
+        const user = await User.findOne(createPointdto.userId);
+        let challenge: Challenge;
+        if (createPointdto.challengeId) {
+            challenge = await Challenge.findOne(createPointdto.challengeId);
+        }
+
+        console.log(createPointdto.userId);
+
+        const point = ChallengePoint.create({
+            user: user,
+            challenge: challenge,
+            value: createPointdto.value,
+            context: createPointdto.context
+        })
+
+        return await point.save();
     }
 
     async updateSubmission(userId: string, challengeId: string, filepath: string, acceptToShare: string) {

@@ -8,6 +8,7 @@ export class CreateNotificationDto {
     @IsString()
     title: string;
 
+    @IsOptional()
     @IsEnum(NotificationActionEnum)
     action: NotificationActionEnum;
 
