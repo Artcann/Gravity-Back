@@ -82,6 +82,7 @@ export class ChallengeService {
     }
 
     async getChallengeSubmissionByUser(userId: string, challengeId: string) {
+        console.log(userId, challengeId);
         const challenge = await ChallengeSubmission.createQueryBuilder("challengeSub")
             .leftJoin("challengeSub.user", "user")
             .leftJoin("challengeSub.challenge", "challenge")
@@ -96,7 +97,7 @@ export class ChallengeService {
             .leftJoinAndSelect('challenge.challenge_submission', 'challenge_submission')
             .leftJoinAndSelect('challenge_submission.user', 'user')
             .leftJoinAndSelect('challenge.translation', 'translation')
-            .select(['challenge.id', 'challenge.imageUri', 'challenge.expiredAt', 'user.id', 'challenge_submission', 'challenge.submissionType', 'challenge.type'])
+            .select(['challenge.id', 'challenge.imageUri', 'challenge.expiredAt', 'user.id', 'challenge_submission', 'challenge.submissionType', 'challenge.type', 'translation'])
             .where("NOT (challenge.type = :type AND challenge.expiredAt < :date)", { type: ChallengeTypeEnum.SPECIAL, date: new Date() })
             .getMany();
         return challenges;
