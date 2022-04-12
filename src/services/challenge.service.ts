@@ -85,6 +85,7 @@ export class ChallengeService {
         const challenge = await ChallengeSubmission.createQueryBuilder("challengeSub")
             .leftJoin("challengeSub.user", "user")
             .leftJoin("challengeSub.challenge", "challenge")
+            .where("user.id = :userId AND challenge.id = :challengeId", {userId: userId, challengeId: challengeId})
             .getMany();
         
         return challenge;
