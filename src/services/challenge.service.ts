@@ -111,6 +111,18 @@ export class ChallengeService {
         return ranking;
     }
 
+    async getUserInProcessingByChallenge(challengeId: string) {
+        const userProcessing = User.createQueryBuilder('user')
+            .leftJoin('user.challenge_status', "status")
+            .leftJoin('status.challenge', 'challenge')
+            .select(["user.id"])
+            .where('challenge.id = :challengeId AND status.status = :status',
+                { challengeId: challengeId, status: ChallengeStatusEnum.PROCESSING })
+            .getMany();
+        
+        return userProcessing;
+    }
+
     async createPoint(createPointdto: CreatePointDto) {
         const user = await User.findOne(createPointdto.userId);
         let challenge: Challenge;
