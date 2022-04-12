@@ -54,7 +54,8 @@ export class EventService {
   getOpenEvent(language: string): Promise<Event[]>{
     return Event.createQueryBuilder('event')
       .innerJoinAndSelect('event.translation', 'translation')
-      .where("translation.language = :language AND open = true", {language})
+      .where("translation.language = :language AND open = true", { language })
+      .orderBy('id', 'DESC')
       .getMany();
   }
 
