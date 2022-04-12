@@ -62,6 +62,7 @@ export class EventService {
   getAllEvent() {
     return Event.createQueryBuilder('event')
       .leftJoinAndSelect('event.translation', 'translation')
+      .orderBy('event.id', "DESC")
       .getMany();
   }
 
