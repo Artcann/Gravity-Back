@@ -30,7 +30,7 @@ export class NotificationService {
             .leftJoin("status.user", "user")
             .select(["notification.content", "status.id", "notification.title", "status.isNew", "notification.action", "notification.url"])
             .where("user.id = :id AND user.language = :lang", { id, lang })
-            .orderBy('id', "DESC")
+            .orderBy('notification.id', "DESC")
             .getMany();
     }
 

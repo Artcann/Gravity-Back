@@ -55,7 +55,7 @@ export class EventService {
     return Event.createQueryBuilder('event')
       .innerJoinAndSelect('event.translation', 'translation')
       .where("translation.language = :language AND open = true", { language })
-      .orderBy('id', 'DESC')
+      .orderBy('event.id', 'DESC')
       .getMany();
   }
 
