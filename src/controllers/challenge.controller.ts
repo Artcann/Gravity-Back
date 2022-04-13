@@ -6,6 +6,7 @@ import { Roles } from "src/decorators/roles.decorator";
 import { CreateChallengeDto } from "src/dto/challenge/create-challenge.dto";
 import { CreatePointDto } from "src/dto/challenge/create-point.dto";
 import { CreateSubmissionDto } from "src/dto/challenge/create-submission.dto";
+import { UpdateStatusDto } from "src/dto/challenge/update-status.dto";
 import { ChallengeStatusEnum } from "src/entities/enums/challenge-status.enum";
 import { ChallengeTypeEnum } from "src/entities/enums/challenge-type.enum";
 import { RoleEnum } from "src/entities/enums/role.enum";
@@ -72,9 +73,9 @@ export class ChallengeController {
 
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.Admin)
-    @Put('status/:challengeId')
-    updateStatus(@Param('challengeId') challengeId: string, @Body() body) {
-        return this.challengeService.updateStatus(challengeId, body.status);
+    @Post('status')
+    updateStatus(@Body() updateStatusDto: UpdateStatusDto) {
+        return this.challengeService.updateStatus(updateStatusDto);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)

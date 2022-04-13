@@ -1,3 +1,4 @@
+import { UpdateStatusDto } from './../dto/challenge/update-status.dto';
 import { createTransport } from 'nodemailer';
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateChallengeDto } from "src/dto/challenge/create-challenge.dto";
@@ -125,12 +126,17 @@ export class ChallengeService {
         return userProcessing;
     }
 
-    async updateStatus(challengeId: string, status: ChallengeStatusEnum) {
+    async updateStatus(updateStatusDto: UpdateStatusDto) {
         let challengeStatus = await ChallengeStatus.createQueryBuilder('status')
             .leftJoin('status.challenge', 'challenge')
-            .where('challenge.id = :id', { id: challengeId })
+            .leftJoin('status.user', 'user')
+            .where('challenge.id = :id AND user.id = :userId',
+            { id: updateStatusDto.challengeId, userId: updateStatusDto.userId})
             .getOne();
-        challengeStatus.status = status;
+        challengeStatus.status = updateStatusDto.status;
+        if (updateStatusDto.context) {
+            challengeStatus.context = updateStatusDto.context;
+        }
         return await challengeStatus.save();
     }
 
