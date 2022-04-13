@@ -82,7 +82,6 @@ export class ChallengeService {
     }
 
     async getChallengeSubmissionByUser(userId: string, challengeId: string) {
-        console.log(userId, challengeId);
         const challenge = await ChallengeSubmission.createQueryBuilder("challengeSub")
             .leftJoin("challengeSub.user", "user")
             .leftJoin("challengeSub.challenge", "challenge")
@@ -132,9 +131,6 @@ export class ChallengeService {
         if (createPointdto.challengeId) {
             challenge = await Challenge.findOne(createPointdto.challengeId);
         }
-
-        console.log(createPointdto.userId);
-
         const point = ChallengePoint.create({
             user: user,
             challenge: challenge,
