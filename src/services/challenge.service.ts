@@ -109,7 +109,14 @@ export class ChallengeService {
         .select(["SUM (points.value) as user_points", "user.id", "user.first_name", "user.last_name", "user.profile_picture"])
         .groupBy('user.id')
         .having('SUM (points.value) > 0')
+        .orderBy('SUM (points.value)', "DESC")
         .getRawMany();
+
+        ranking.forEach(user => {
+            if (!user.user_profile_picture) {
+                user.user_profile_picture = "image-1649843189490-134822591.webp";
+            }
+        })
 
         return ranking;
     }
