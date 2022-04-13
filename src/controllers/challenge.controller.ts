@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, ForbiddenException, Get, HttpException, Param, Post, Req, Request, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, ForbiddenException, Get, HttpException, Param, Post, Put, Req, Request, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { chat_v1 } from "googleapis";
 import { diskStorage, memoryStorage } from "multer";
@@ -68,6 +68,13 @@ export class ChallengeController {
     @Get('admin/all')
     getAllChallenges() {
         return this.challengeService.getAll();
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RoleEnum.Admin)
+    @Put('status/:challengeId')
+    updateStatus(@Param('challengeId') challengeId: string, @Body() body) {
+        return this.challengeService.updateStatus(challengeId, body.status);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
@@ -148,7 +155,21 @@ export class ChallengeController {
     @Roles(RoleEnum.Admin)
     @Get('list-user/processing/:id')
     listUserProcessing(@Param('id') challengeId: string) {
-        return this.challengeService.getUserInProcessingByChallenge(challengeId);
+        return this.challengeService.getUserByChallengeByStatus(challengeId, ChallengeStatusEnum.PROCESSING);
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RoleEnum.Admin)
+    @Get('list-user/validated/:id')
+    listUserAccepted(@Param('id') challengeId: string) {
+        return this.challengeService.getUserByChallengeByStatus(challengeId, ChallengeStatusEnum.VALIDATED);
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RoleEnum.Admin)
+    @Get('list-user/refused/:id')
+    listUserRefused(@Param('id') challengeId: string) {
+        return this.challengeService.getUserByChallengeByStatus(challengeId, ChallengeStatusEnum.REFUSED);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)

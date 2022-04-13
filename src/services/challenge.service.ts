@@ -1,3 +1,4 @@
+import { createTransport } from 'nodemailer';
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateChallengeDto } from "src/dto/challenge/create-challenge.dto";
 import { CreatePointDto } from "src/dto/challenge/create-point.dto";
@@ -97,7 +98,6 @@ export class ChallengeService {
             .leftJoinAndSelect('challenge_submission.user', 'user')
             .leftJoinAndSelect('challenge.translation', 'translation')
             .select(['challenge.id', 'challenge.imageUri', 'challenge.expiredAt', 'user.id', 'challenge_submission', 'challenge.submissionType', 'challenge.type', 'translation'])
-            .where("NOT (challenge.type = :type AND challenge.expiredAt < :date)", { type: ChallengeTypeEnum.SPECIAL, date: new Date() })
             .getMany();
         return challenges;
     }
@@ -113,16 +113,25 @@ export class ChallengeService {
         return ranking;
     }
 
-    async getUserInProcessingByChallenge(challengeId: string) {
+    async getUserByChallengeByStatus(challengeId: string, status: ChallengeStatusEnum) {
         const userProcessing = User.createQueryBuilder('user')
             .leftJoin('user.challenge_status', "status")
             .leftJoin('status.challenge', 'challenge')
             .select(["user.id"])
             .where('challenge.id = :challengeId AND status.status = :status',
-                { challengeId: challengeId, status: ChallengeStatusEnum.PROCESSING })
+                { challengeId: challengeId, status: status})
             .getMany();
         
         return userProcessing;
+    }
+
+    async updateStatus(challengeId: string, status: ChallengeStatusEnum) {
+        let challengeStatus = await ChallengeStatus.createQueryBuilder('status')
+            .leftJoin('status.challenge', 'challenge')
+            .where('challenge.id = :id', { id: challengeId })
+            .getOne();
+        challengeStatus.status = status;
+        return await challengeStatus.save();
     }
 
     async createPoint(createPointdto: CreatePointDto) {
