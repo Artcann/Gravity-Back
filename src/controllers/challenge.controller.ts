@@ -60,8 +60,12 @@ export class ChallengeController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(RoleEnum.VerifiedUser)
     @Get('ranking')
-    getRanking() {
-        return this.challengeService.getRanking();
+    async getRanking(@Request() req) {
+        let ranking = await this.challengeService.getRanking();
+        const userPoint = await this.challengeService.getUserPoint(req.user.userId);
+        console.log(userPoint);
+        ranking.push(userPoint);
+        return ranking;
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)

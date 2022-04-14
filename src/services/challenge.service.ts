@@ -110,6 +110,7 @@ export class ChallengeService {
         .groupBy('user.id')
         .having('SUM (points.value) > 0')
         .orderBy('SUM (points.value)', "DESC")
+        .limit(3)
         .getRawMany();
 
         ranking.forEach(user => {
@@ -119,6 +120,24 @@ export class ChallengeService {
         })
 
         return ranking;
+    }
+
+    async getUserPoint(userId: string) {
+        const user = await User.createQueryBuilder('user')
+            .leftJoinAndSelect('user.challenge_points', 'points')
+            .select(["SUM (points.value) as user_points", "user.id", "user.first_name", "user.last_name", "user.profile_picture"])
+            .where('user.id = :id', { id: userId })
+            .groupBy('user.id')
+            .getRawOne();
+            
+        if (!user.user_profile_picture) {
+            user.user_profile_picture = "image-1649843189490-134822591.webp";
+        }
+        if (!user.user_points) {
+            user.user_points = 0;
+        }
+
+        return user;
     }
 
     async getUserByChallengeByStatus(challengeId: string, status: ChallengeStatusEnum) {
