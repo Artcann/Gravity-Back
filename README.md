@@ -1,4 +1,21 @@
 <p align="center">
+<img src="https://github.com/HipppB/Gravity-App-Mobile-App/blob/master/src/assets/images/logos/Couleur/Logo.png" style="width: 300px; heigth: 300px"/>
+</p>
+
+# Gravity Admin panel
+
+## 🪐 The project
+
+This app was developed to connect with students during the week of election of the BDE of ISEP school 2022.
+This repository is the code of the API, which permits to the app to work.
+
+## GitHub repositories
+- Server : https://github.com/Artcann/Gravity-Back (Nest JS)
+- Back office : https://github.com/HipppB/Gravity-App-Admin-Panel (React JS)
+- Mobile app : https://github.com/HipppB/Gravity-App-Mobile-App (React Native)
+
+
+<p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
 
