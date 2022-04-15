@@ -2,7 +2,7 @@
 <img src="https://github.com/HipppB/Gravity-App-Mobile-App/blob/master/src/assets/images/logos/Couleur/Logo.png" style="width: 300px; heigth: 300px"/>
 </p>
 
-# Gravity Admin panel
+# Gravity API
 
 ## 🪐 The project
 
